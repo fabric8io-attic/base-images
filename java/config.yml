@@ -1,0 +1,43 @@
+---
+fish-pepper:
+  params:
+    - base
+    - version
+    - type
+  name: "fabric8/java"
+  build: "0.1"
+
+version:
+  agentBond: "0.1.0"
+  jolokia: "1.3.1"
+  jmxExporter: "0.3-SNAPSHOT"
+
+abSepOpen: "{{"
+abSepClosed: "}}"
+
+config:
+  base:
+    alpine:
+      experimental: true
+      from: "alpine"
+      version: "3.2"
+      description: "Alpine"
+      glibc: "2.21-r2"
+      downloadUrl-jre: "http://www.java.net/download/jdk8u60/archive/b18/binaries/jre-8u60-ea-bin-b18-linux-x64-02_jun_2015.tar.gz"
+      downloadUrl-jdk: "http://anduin.linuxfromscratch.org/files/BLFS/OpenJDK-1.8.0.51/OpenJDK-1.8.0.51-x86_64-bin.tar.xz"
+    centos:
+      from: "centos"
+      description: "CentOS"
+      version: "7"
+  version:
+    openjdk7:
+      version: "1.7.0"
+      description: "OpenJDK 7"
+    openjdk8:
+      version: "1.8.0"
+      description: "OpenJDK 8"
+  type:
+    jre:
+      description: "Java Runtime Environment (JRE)"
+    jdk:
+      description: "Java Development Kit (JDK)"

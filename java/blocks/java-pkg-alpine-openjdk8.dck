@@ -1,0 +1,19 @@
+# Experimental setup for JDK8 on Alpine Linux which requires glibc, too.
+# Maybe the cleanup could be even more aggressive
+RUN apk add --update curl tar xz ca-certificates \
+ && cd /tmp \
+ && curl "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-{{= it.config.base.glibc}}.apk" -O \
+ && curl "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-bin-{{= it.config.base.glibc}}.apk" -O \
+ && apk add --allow-untrusted glibc-{{= it.config.base.glibc}}.apk glibc-bin-{{= it.config.base.glibc}}.apk \
+ && /usr/glibc/usr/bin/ldconfig /lib /usr/glibc/usr/lib \
+ && echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf \
+ && curl -L {{= it.config.base['downloadUrl-' + it.param.type] }} -o /tmp/jdk.tgz \
+ && mkdir /opt \
+ && cd /opt \
+ && tar xf /tmp/jdk.tgz \
+ && cd /tmp \
+ && ln -s /opt/*1.8* /opt/jdk \
+ && ln -s /opt/jdk/bin/java /usr/bin/java \
+ && apk del ca-certificates tar xz \
+ && rm /tmp/* /var/cache/apk/* \
+ && rm -rf /opt/jdk/demo /opt/jdk/sample /opt/jdk/man /opt/jdk/src.zip

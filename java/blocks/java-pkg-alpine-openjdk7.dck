@@ -1,0 +1,4 @@
+RUN apk add --update \
+    curl \
+    {{= it.param.type == 'jre' ? 'openjdk7-jre-base' : 'openjdk7' }} \
+ && rm /var/cache/apk/*
