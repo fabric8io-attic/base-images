@@ -1,7 +1,7 @@
-## Fabric8 Java Base Image
+## Fabric8 Java Base Image OpenJDK 7 (JRE)
 
 This image is based on CentOS and provides
-OpenJDK 7, jre
+OpenJDK 7 (JRE)
 
 It includes:
 
@@ -9,7 +9,7 @@ It includes:
   and Prometheus' [jmx_exporter](https://github.com/prometheus/jmx_exporter). 
   The agent is installed as `/opt/agent-bond/agent-bond.jar`. 
 
-* A startup script [`/run-java.sh`](#startup-script-run-java.sh) for starting up Java applications.
+* A startup script [`/run-java.sh`](#startup-script-run-javash) for starting up Java applications.
 
 ### Agent Bond
 
