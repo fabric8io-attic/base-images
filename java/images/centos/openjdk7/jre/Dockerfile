@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos
 RUN yum install -y \
        java-1.7.0-openjdk 
 
@@ -12,5 +12,8 @@ RUN chmod 755 /bin/agent-bond-opts \
 ADD jmx_exporter_config.json /opt/agent-bond/
 EXPOSE 8778 9779
 
-# Print out help message et al.
-CMD java -jar /opt/agent-bond/agent-bond.jar
+ADD run-java.sh /
+RUN mkdir /app \
+ && chmod 755 /run-java.sh
+
+CMD [ "/run-java.sh" ]

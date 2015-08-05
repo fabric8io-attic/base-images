@@ -1,6 +1,9 @@
-FROM {{= it.param.base }}:{{= it.config.base.version }}
+FROM {{= it.param.base }}
 {{= it.blocks["java-pkg-" + it.param.base] || ''}}{{= it.blocks["java-pkg-" + it.param.base + "-" + it.param.version] || ''}}
 {{= it.blocks["agent-bond"] }}
 
-# Print out help message et al.
-CMD java -jar /opt/agent-bond/agent-bond.jar
+ADD run-java.sh /
+RUN mkdir /app \
+ && chmod 755 /run-java.sh
+
+CMD [ "/run-java.sh" ]

@@ -57,6 +57,6 @@ Some options for integration in various environments
 
 ### Versions:
 
-* Base-Image: **CentOS 7**
+* Base-Image: **CentOS undefined**
 * Java: **OpenJDK 8 1.8.0** (Java Development Kit (JDK))
 * Agent-Bond: **0.1.0** (Jolokia 1.3.1, jmx_exporter 0.3-SNAPSHOT)
