@@ -5,7 +5,7 @@ fish-pepper:
     - version
     - type
   name: "fabric8/java"
-  build: "0.1"
+  build: "1.0"
 
 version:
   agentBond: "0.1.0"

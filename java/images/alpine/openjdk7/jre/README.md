@@ -1,7 +1,7 @@
 ## Fabric8 Java Base Image
 
-This image is based on {{= it.config.base.description }} and provides
-{{= it.config.version.description }}, {{= it.param.type }}
+This image is based on Alpine and provides
+OpenJDK 7, jre
 
 It includes:
 
@@ -35,8 +35,8 @@ So, if you start the container with `docker run -e AB_OFF ...` no agent will be 
 
 The following versions and defaults are used:
 
-* [Jolokia](http://www.jolokia.org) : version **{{= it.jolokiaVersion }}** and port **8778**
-* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **{{= it.jmxExporterVersion }}** and port **9779**  
+* [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
+* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
 
 #### Jolokia configuration
 
@@ -97,6 +97,6 @@ hand over the arguments to the Java application.
 
 ### Versions:
 
-* Base-Image: **{{= it.config.base.description + " " + it.config.base.version }}**
-* Java: **{{= it.config.version.description + " " + it.config.version.version }}** ({{= it.config.type.description }})
-* Agent-Bond: **{{= it.version.agentBond }}** (Jolokia {{= it.version.jolokia }}, jmx_exporter {{= it.version.jmxExporter }})
+* Base-Image: **Alpine undefined**
+* Java: **OpenJDK 7 1.7.0** (Java Runtime Environment (JRE))
+* Agent-Bond: **0.1.0** (Jolokia 1.3.1, jmx_exporter 0.3-SNAPSHOT)

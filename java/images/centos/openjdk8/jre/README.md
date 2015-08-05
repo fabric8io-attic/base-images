@@ -1,9 +1,17 @@
-## Java base image with Agent Bond ...
+## Fabric8 Java Base Image
 
-This image is based on CentOS and OpenJDK 8 and 
-includes an [Agent Bond](https://github.com/fabric8io/agent-bond) Agent with [Jolokia](http://www.jolokia.org) 
-and Prometheus' [jmx_exporter](https://github.com/prometheus/jmx_exporter). 
-The agent is installed as `/opt/agent-bond/agent-bond.jar`. 
+This image is based on CentOS and provides
+OpenJDK 8, jre
+
+It includes:
+
+* An [Agent Bond](https://github.com/fabric8io/agent-bond) Agent with [Jolokia](http://www.jolokia.org) 
+  and Prometheus' [jmx_exporter](https://github.com/prometheus/jmx_exporter). 
+  The agent is installed as `/opt/agent-bond/agent-bond.jar`. 
+
+* A startup script `/run-java.sh` for starting up Java applications.
+
+### Agent Bond
 
 In order to enable Jolokia for your application you should use this 
 image as a base image (via `FROM`) and use the output of `agent-bond-opts` in 
@@ -30,7 +38,7 @@ The following versions and defaults are used:
 * [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
 * [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
 
-### Jolokia configuration
+#### Jolokia configuration
 
 * **AB_JOLOKIA_CONFIG** : If set uses this file (including path) as Jolokia JVM agent properties (as described 
   in Jolokia's [reference manual](http://www.jolokia.org/reference/html/agents.html#agents-jvm)). 
@@ -49,11 +57,43 @@ Some options for integration in various environments
 * **AB_JOLOKIA_AUTH_OPENSHIFT** : Switch on OAuth2 authentication for OpenShift. The value of this parameter must be the OpenShift API's 
   base URL (e.g. `https://localhost:8443/osapi/v1/`)
 
-### jmx_exporter configuration 
+#### jmx_exporter configuration 
 
 * **AB_JMX_EXPORTER_OPTS** : Configuration to use for `jmx_exporter` (in the format `<port>:<path to config>`)
 * **AB_JMX_EXPORTER_PORT** : Port to use for the JMX Exporter. Default: `9779`
 * **AB_JMX_EXPORTER_CONFIG** : Path to configuration to use for `jmx_exporter`: Default: `/opt/agent-bond/jmx_exporter_config.json`
+
+### Startup Script /run-java.sh
+
+The default command for this image is `/run-java.sh`. Its purpose it
+to fire up Java applications which are provided as fat-jars, including
+all dependencies or more classical from a main class, where the
+classpath is build up from all jars within a directory.x1
+
+The script can be influenced by the following environment variables:
+
+* **JAVA_APP_DIR** the directory where all JAR files can be
+  found. This is `/app` by default.
+* **JAVA_WORKDIR** working directory from where to start the JVM. By
+  default it is `$JAVA_APP_DIR`
+* **JAVA_OPTIONS** options to add when calling `java`
+* **JAVA_MAIN_CLASS** A main class to use as argument for `java`. When
+  this environment variable is given, all jar files in `$JAVA_APP_DIR`
+  are added to the classpath as well as `$JAVA_APP_DIR` and
+  `JAVA_WORKDIR` themselves, too.
+* **JAVA_APP_JAR** A jar file with an appropriate mainfest so that it
+  can be started with `java -jar`. If given it takes precedence of
+  `$JAVA_MAIN_CLASS`. In addition `$JAVA_APP_DIR` and `$JAVA_WORKDIR`
+  are added to the classpath, too. 
+
+If neither `$JAVA_APP_JAR` nor `$JAVA_MAIN_CLASS` is given,
+`$JAVA_APP_DIR` is checked for a single JAR file which is taken as
+`$JAVA_APP_JAR`. If no or more then one jar file is found, the script
+throws an error. 
+
+Any arguments given during startup are taken over as arguments to the
+Java call. E.g. a `docker run myimage-based-on-java arg1 arg2` will
+hand over the arguments to the Java application.
 
 ### Versions:
 
