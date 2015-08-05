@@ -2,7 +2,7 @@
 
 This repository holds a set of useful Docker base images:
 
-|  |  |
+| Image | Description  |
 | --------------------------------------------- | ---------------------------------------- |
 | **[java](#java-base-images)** | Java base images useful for microservices or JEE application servers|
 | **sti** | Source-To-Image base image useful when running in OpenShift V3. (*to be done*) |
