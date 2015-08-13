@@ -1,0 +1,25 @@
+---
+fish-pepper:
+  params:
+    - base
+  name: "fabric8/sti-java"
+  build: "1.0"
+
+# Custom   
+version:
+  mavenMajor: "3"
+  maven: "3.3.3"
+  agentBond: "0.1.0"
+
+# Used for escaping in 'agent-bond-opts' where the same delimiters are used
+abSepOpen: "{{"
+abSepClosed: "}}"
+
+config:
+  base:
+    centos7:
+      from: "openshift/base-centos7"
+    rhel7:
+      from: "openshift/base-rhel7"
+      fish-pepper:
+        experimental: true

@@ -1,6 +1,6 @@
 FROM {{= it.param.base }}
-{{= it.blocks["java-pkg-" + it.param.base] || ''}}{{= it.blocks["java-pkg-" + it.param.base + "-" + it.param.version] || ''}}
-{{= it.blocks["agent-bond"] }}
+{{= it.block("java-pkg-" + it.param.base) || ''}}{{= it.block("java-pkg-" + it.param.base + "-" + it.param.version) || ''}}
+{{= it.block("agent-bond") }}
 
 ADD run-java.sh /
 RUN mkdir /app \
