@@ -47,19 +47,19 @@ if [ -z ${AB_OFF+x} ]; then
         jolokia_opts="${jolokia_opts}${jsep}${AB_JOLOKIA_OPTS}"
         jsep=","
      fi
-     opts="${opts}${sep}jolokia{{${jolokia_opts}}}"
+     opts="${opts}${sep}jolokia{{= fp.abSepOpen }}${jolokia_opts}{{= fp.abSepClosed }}"
      sep=","
    fi
    if [ -z ${AB_ENABLED+x} ] || [ x${AB_ENABLED} != x${AB_ENABLED/jmx_exporter/} ]; then
      je_opts=""
      jsep=""
      if [ -n "$AB_JMX_EXPORTER_OPTS" ]; then
-        opts="${opts}${sep}jmx_exporter{{${AB_JMX_EXPORTER_OPTS}}}"
+        opts="${opts}${sep}jmx_exporter{{= fp.abSepOpen }}${AB_JMX_EXPORTER_OPTS}{{= fp.abSepClosed }}"
         sep=","
      else
         port=${AB_JMX_EXPORTER_PORT-9779}
         config=${AB_JMX_EXPORTER_CONFIG-/opt/agent-bond/jmx_exporter_config.json}
-        opts="${opts}${sep}jmx_exporter{{${port}:${config}}}"
+        opts="${opts}${sep}jmx_exporter{{= fp.abSepOpen }}${port}:${config}{{= fp.abSepClosed }}"
         sep=","
      fi
    fi

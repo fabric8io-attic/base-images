@@ -1,4 +1,4 @@
-FROM {{= it.param.base }}
+FROM {{= fp.param.base }}
 
 # Directory which will hold the source provided by STI
 LABEL
@@ -8,13 +8,13 @@ ADD agent-bond-opts /bin/
 # Standard Java 8 from the repo
 RUN yum install -y java-1.8.0-openjdk-headless \
  && yum clean all -y \
- && curl http://www.apache.org/dist/maven/maven-{{= it.version.mavenMajor}}/{{= it.version.maven }}/binaries/apache-maven-{{= it.version.maven }}-bin.tar.gz | \
+ && curl http://www.apache.org/dist/maven/maven-{{= fp.version.mavenMajor}}/{{= fp.version.maven }}/binaries/apache-maven-{{= fp.version.maven }}-bin.tar.gz | \
     tar -xzf - -C /opt \
- && ln -s /opt/apache-maven-{{= it.version.maven }} /opt/maven \
+ && ln -s /opt/apache-maven-{{= fp.version.maven }} /opt/maven \
  && ln -s /opt/maven/bin/mvn /usr/bin/mvn \
  && chmod 755 /bin/agent-bond-opts \
  && mkdir -p /opt/agent-bond \
- && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/{{= it.version.agentBond }}/agent-bond-agent-{{= it.version.agentBond }}.jar \
+ && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/{{= fp.version.agentBond }}/agent-bond-agent-{{= fp.version.agentBond }}.jar \
           -o /opt/agent-bond/agent-bond.jar \
  && chmod 444 /opt/agent-bond/agent-bond.jar
 

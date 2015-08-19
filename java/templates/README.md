@@ -1,7 +1,7 @@
-## Fabric8 Java Base Image {{= it.config.version.description }} ({{= it.param.type.toUpperCase() }})
+## Fabric8 Java Base Image {{= fp.config.version.description }} ({{= fp.param.type.toUpperCase() }})
 
-This image is based on {{= it.config.base.description }} and provides
-{{= it.config.version.description }} ({{= it.param.type.toUpperCase() }})
+This image is based on {{= fp.config.base.description }} and provides
+{{= fp.config.version.description }} ({{= fp.param.type.toUpperCase() }})
 
 It includes:
 
@@ -35,8 +35,8 @@ So, if you start the container with `docker run -e AB_OFF ...` no agent will be 
 
 The following versions and defaults are used:
 
-* [Jolokia](http://www.jolokia.org) : version **{{= it.jolokiaVersion }}** and port **8778**
-* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **{{= it.jmxExporterVersion }}** and port **9779**  
+* [Jolokia](http://www.jolokia.org) : version **{{= fp.jolokiaVersion }}** and port **8778**
+* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **{{= fp.jmxExporterVersion }}** and port **9779**  
 
 #### Jolokia configuration
 
@@ -97,6 +97,6 @@ hand over the arguments to the Java application.
 
 ### Versions:
 
-* Base-Image: **{{= it.config.base.description + " " + it.config.base.version }}**
-* Java: **{{= it.config.version.description + " " + it.config.version.version }}** ({{= it.config.type.description }})
-* Agent-Bond: **{{= it.version.agentBond }}** (Jolokia {{= it.version.jolokia }}, jmx_exporter {{= it.version.jmxExporter }})
+* Base-Image: **{{= fp.config.base.description + " " + fp.config.base.version }}**
+* Java: **{{= fp.config.version.description + " " + fp.config.version.version }}** ({{= fp.config.type.description }})
+* Agent-Bond: **{{= fp.version.agentBond }}** (Jolokia {{= fp.version.jolokia }}, jmx_exporter {{= fp.version.jmxExporter }})

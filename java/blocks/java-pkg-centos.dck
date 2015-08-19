@@ -1,4 +1,4 @@
 RUN yum install -y \
-       java-{{= it.config.version.version }}-openjdk {{? it.param.type === "jdk" }}\
-       java-{{= it.config.version.version }}-openjdk-devel
+       java-{{= fp.config.version.version }}-openjdk {{? fp.param.type === "jdk" }}\
+       java-{{= fp.config.version.version }}-openjdk-devel
 {{?}}
