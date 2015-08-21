@@ -24,6 +24,11 @@ Java application
     export JAVA_OPTIONS="$JAVA_OPTIONS $(agent-bond-opts)"
     # .... us JAVA_OPTIONS when starting your app, e.g. as Tomcat does
 
+The following versions and defaults are used:
+
+* [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
+* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
+
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
 variables:
 
@@ -31,12 +36,6 @@ variables:
 * **AB_ENABLED** : Comma separated list of sub-agents enabled. Currently allowed values are `jolokia` and `jmx_exporter`. 
   By default both are enabled.
 
-So, if you start the container with `docker run -e AB_OFF ...` no agent will be launched.
-
-The following versions and defaults are used:
-
-* [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
-* [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
 
 #### Jolokia configuration
 
@@ -63,6 +62,8 @@ Some options for integration in various environments
 * **AB_JMX_EXPORTER_PORT** : Port to use for the JMX Exporter. Default: `9779`
 * **AB_JMX_EXPORTER_CONFIG** : Path to configuration to use for `jmx_exporter`: Default: `/opt/agent-bond/jmx_exporter_config.json`
 
+
+
 ### Startup Script /run-java.sh
 
 The default command for this image is `/run-java.sh`. Its purpose it
@@ -70,7 +71,7 @@ to fire up Java applications which are provided as fat-jars, including
 all dependencies or more classical from a main class, where the
 classpath is build up from all jars within a directory.x1
 
-The script can be influenced by the following environment variables:
+The run script can be influenced by the following environment variables:
 
 * **JAVA_APP_DIR** the directory where all JAR files can be
   found. This is `/app` by default.
@@ -93,7 +94,8 @@ throws an error.
 
 Any arguments given during startup are taken over as arguments to the
 Java call. E.g. a `docker run myimage-based-on-java arg1 arg2` will
-hand over the arguments to the Java application.
+be hand over the arguments to the Java application.
+
 
 ### Versions:
 

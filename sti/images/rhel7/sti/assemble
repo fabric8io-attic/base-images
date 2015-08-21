@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# ==============================================================================
+# Variable setup
+
+. sti-setup
+
+# Where artifacts are created within the build
+output_dir=${OUTPUT_DIR:-${sti_source_dir}/target}
+if [ "${output_dir:0:1}" != "/" ]; then
+   output_dir="${sti_source_dir}/${output_dir}"
+fi
+
+# Directory where to deploy generated artifacts
+app_dir=${JAVA_APP_DIR:-/app}
+[ -d ${app_dir} ] || mkdir -p ${app_dir}
+
+# =========================================================================
+# Helper functions:
+
+function check_error() {
+  label=$1
+  error=$2
+  if [ $error -ne 0 ]; then
+    echo "Aborting due to error code $error from $label"
+    exit $error
+  fi
+}
+
+function build_maven() {
+  # Default args: no tests and copying over dependencies into the target
+  if [ -z "$MAVEN_ARGS" ]; then
+    export MAVEN_ARGS="package dependency:copy-dependencies -DskipTests -e"
+  fi
+  echo "Found pom.xml ... attempting to build with 'mvn ${MAVEN_ARGS}'"
+
+  old=$(pwd)
+  cd ${sti_source_dir}
+
+  # Run Maven
+  mvn --version
+  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 $MAVEN_ARGS $MAVEN_DEBUG_ARGS
+
+  check_error "Maven build" $?
+
+  echo "Copying Maven artefacts from ${output_dir} to ${app_dir} ..."
+  cp -r ${output_dir}/* ${app_dir} >& /dev/null
+
+  cd $old
+}
+
+function plain_copy() {
+  # Assuming that the source already contains compiled artefacts
+  echo "Copying binaries from ${output_dir} to ${app_dir} ..."
+  cp -r ${output_dir}/* ${app_dir} >& /dev/null
+}
+
+# TODO: Ant and gradle builds ...
+
+# =========================================================================
+if [ -f "${sti_source_dir}/pom.xml" ]; then
+  # If a pom.xml is present use maven
+  build_maven
+else
+  plain_copy
+fi
+
+echo "... done"
