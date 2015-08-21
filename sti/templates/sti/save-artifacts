@@ -1,9 +1,10 @@
 #!/bin/sh
 
+. sti-setup
+
 # Tar up maven repository for reuse in an incremental build
-if [ -d "${HOME}/.m2" ]; then
-   cd ${HOME}
-   mv .m2 m2
+if [ -d "${sti_artifacts_dir}/m2" ]; then
+   cd ${sti_artifacts_dir}
    tar cf - m2
    cd -
 fi

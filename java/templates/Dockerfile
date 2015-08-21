@@ -1,4 +1,4 @@
-FROM {{= fp.param.base }}
+FROM {{= fp.config.base.from }}
 {{= fp.block("java-pkg-" + fp.param.base) || ''}}{{= fp.block("java-pkg-" + fp.param.base + "-" + fp.param.version) || ''}}
 {{= fp.block("agent-bond") }}
 

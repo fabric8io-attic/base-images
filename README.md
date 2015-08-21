@@ -48,8 +48,14 @@ described in the associated
 
 ### STI
 
-*to be done*
+STI builder images for OpenShift V3 come in two flavors, one based on
+[CentOS 7](https://www.centos.org/) the other has
+[RHEL 7](http://www.redhat.com) as base. 
 
+These images support also
+[agent-bond](https://github.com/fabric8io/agent-bond) and the same
+startup script as the vanilla Java images described above.
+ 
 ### Application Servers
 
 *to be done*
