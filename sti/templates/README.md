@@ -15,11 +15,11 @@ behaviour of this builder image:
 
 ## Build-Time
 
-* `STI_DIR` Base STI dir (default: `/tmp`)
-* `STI_SOURCE_DIR` Directory where the source should be copied to (default: `${STI_DIR}/src`)
-* `STI_ARTIFACTS_DIR` Artifact directory used for incremental build (default: `${STI_DIR}/artifacts`)
-* `OUTPUT_DIR` Directory where to find the generated artefacts (default: `${STI_SOURCE_DIR}/target`)
-* `JAVA_APP_DIR` Where the application jar should be put to (default: `/app`)
+* **STI_DIR** Base STI dir (default: `/tmp`)
+* **STI_SOURCE_DIR** Directory where the source should be copied to (default: `${STI_DIR}/src`)
+* **STI_ARTIFACTS_DIR** Artifact directory used for incremental build (default: `${STI_DIR}/artifacts`)
+* **OUTPUT_DIR** Directory where to find the generated artefacts (default: `${STI_SOURCE_DIR}/target`)
+* **JAVA_APP_DIR** Where the application jar should be put to (default: `/app`)
 
 ## Run-Time
 
