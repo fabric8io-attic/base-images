@@ -2,8 +2,8 @@
 dir=${AB_DIR:-/opt/agent-bond}
 sep="="
 # Options separators defined to avoid clash with fish-pepper templating
-_AB_OPEN="{" + "{"
-_AB_CLOSE="}" + "}"
+_AB_OPEN="{""{"
+_AB_CLOSE="}""}"
 if [ -z ${AB_OFF+x} ]; then
    opts="-javaagent:$dir/agent-bond.jar"
    config=${AB_CONFIG:-$dir/agent-bond.properties}

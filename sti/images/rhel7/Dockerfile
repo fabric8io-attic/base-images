@@ -24,6 +24,8 @@ RUN yum install -y \
  && yum -y autoremove \
  && rm /tmp/README.md
 
+ENV JAVA_HOME /etc/alternatives/java_sdk
+
 # agent-bond with Jolokia and jmx_exporter
 # Agent bond
 ADD agent-bond-opts /bin/

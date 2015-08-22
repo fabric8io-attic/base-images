@@ -29,19 +29,28 @@ function check_error() {
 
 function build_maven() {
   # Default args: no tests and copying over dependencies into the target
-  if [ -z "$MAVEN_ARGS" ]; then
-    export MAVEN_ARGS="package dependency:copy-dependencies -DskipTests -e"
+  maven_args=${MAVEN_ARGS:-package dependency:copy-dependencies -DskipTests -e}
+
+  if [ x"$MAVEN_MODULE" != x ]; then
+    maven_args="${maven_args} -pl $MAVEN_MODULE -am"
+    maven_dep_args="-pl $MAVEN_MODULE -am"
   fi
-  echo "Found pom.xml ... attempting to build with 'mvn ${MAVEN_ARGS}'"
+  echo "Found pom.xml ... attempting to build with mvn ${MAVEN_ARGS}"
 
   old=$(pwd)
   cd ${sti_source_dir}
 
   # Run Maven
   mvn --version
-  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 $MAVEN_ARGS $MAVEN_DEBUG_ARGS
+  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 ${maven_args} ${MAVEN_EXTRA_ARGS}
 
   check_error "Maven build" $?
+
+  # Write out dependencies into a dedicated file
+  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 \
+      -Dmdep.outputFile=${output_dir}/classpath \
+      ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+      dependency:build-classpath
 
   echo "Copying Maven artefacts from ${output_dir} to ${app_dir} ..."
   cp -r ${output_dir}/* ${app_dir} >& /dev/null
@@ -54,8 +63,6 @@ function plain_copy() {
   echo "Copying binaries from ${output_dir} to ${app_dir} ..."
   cp -r ${output_dir}/* ${app_dir} >& /dev/null
 }
-
-# TODO: Ant and gradle builds ...
 
 # =========================================================================
 if [ -f "${sti_source_dir}/pom.xml" ]; then

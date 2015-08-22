@@ -24,12 +24,15 @@ RUN yum install -y \
  && yum -y autoremove \
  && rm /tmp/README.md
 
+ENV JAVA_HOME /etc/alternatives/java_sdk
+
 # agent-bond with Jolokia and jmx_exporter
 {{= fp.block('agent-bond') }}
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
-COPY run-java.sh /usr/local/sti/run
+
+{{= fp.block("run-java-sh","/usr/local/sti/run") }}
 
 RUN chmod a+x /usr/local/sti/*
 

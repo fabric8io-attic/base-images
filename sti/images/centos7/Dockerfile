@@ -24,6 +24,8 @@ RUN yum install -y \
  && yum -y autoremove \
  && rm /tmp/README.md
 
+ENV JAVA_HOME /etc/alternatives/java_sdk
+
 # agent-bond with Jolokia and jmx_exporter
 # Agent bond
 ADD agent-bond-opts /bin/
@@ -37,6 +39,9 @@ EXPOSE 8778 9779
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
+
+# Add run script to /usr/local/sti/run
 COPY run-java.sh /usr/local/sti/run
+
 
 RUN chmod a+x /usr/local/sti/*
