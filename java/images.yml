@@ -24,12 +24,14 @@ config:
         experimental: true
 
       from: "alpine:3.2"
+      version: "3.2"
       description: "Alpine"
       glibc: "2.21-r2"
       downloadUrl-jre: "http://www.java.net/download/jdk8u60/archive/b18/binaries/jre-8u60-ea-bin-b18-linux-x64-02_jun_2015.tar.gz"
       downloadUrl-jdk: "http://anduin.linuxfromscratch.org/files/BLFS/OpenJDK-1.8.0.51/OpenJDK-1.8.0.51-x86_64-bin.tar.xz"
     centos:
       from: "centos:7"
+      version: "7"
       description: "CentOS"
   version:
     openjdk7:

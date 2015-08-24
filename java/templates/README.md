@@ -22,7 +22,7 @@ Java application
 
     # ...
     export JAVA_OPTIONS="$JAVA_OPTIONS $(agent-bond-opts)"
-    # .... us JAVA_OPTIONS when starting your app, e.g. as Tomcat does
+    # .... use JAVA_OPTIONS when starting your app, e.g. as Tomcat does
 
 The following versions and defaults are used:
 
@@ -41,7 +41,7 @@ to fire up Java applications which are provided as fat-jars, including
 all dependencies or more classical from a main class, where the
 classpath is build up from all jars within a directory.x1
 
-{{= fp.block('run-java-sh') }}
+{{= fp.block('run-java-options') }}
 
 ### Versions:
 
