@@ -36,6 +36,9 @@ behaviour of this builder image:
 The environment variables are best set in `.sti/environment` top in
 you project. This file is picked up bei STI during building and running.  
 
+You can also put a `setenv.sh` file holding theses environment variables into `${OUTPUT_DIR}` or
+`${OUTPUT_DIR}/classes` which will be picked up during startup of generated application.  
+
 ## Agent-Bond Options
 
 Agent bond itself can be influenced via environment variables, too: 
