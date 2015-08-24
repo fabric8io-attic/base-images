@@ -13,7 +13,16 @@ if [ "x$JAVA_ENABLE_DEBUG" != "x" ]; then
     java_options="${java_options} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${debug_port}"
 fi
 work_dir=${JAVA_WORKDIR:-${app_dir}}
-classpath=${JAVA_CLASSPATH:-"classes:${java_app_dir}/*"}
+
+if [ -z "${JAVA_CLASSPATH}" ]; then
+   if [ -f "${app_dir}/classpath" ]; then
+     classpath=`cat "${app_dir}/classpath"`
+   else
+     classpath="classes:${java_app_dir}/*"
+   fi
+else
+   classpath=${JAVA_CLASSPATH}
+fi
 
 # Try hard to find a sane default if no main class and no main class
 # is specified explicitely

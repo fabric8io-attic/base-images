@@ -46,6 +46,10 @@ The run script can be influenced by the following environment variables:
   can be started with `java -jar`. If given it takes precedence of
   `$JAVA_MAIN_CLASS`. In addition `$JAVA_APP_DIR` and `$JAVA_WORKDIR`
   are added to the classpath, too. 
+* **JAVA_CLASSPATH** the classpath to use. If not given, the script checks 
+  for a file `${JAVA_APP_DIR}/classpath` and use its content literally 
+  as classpath. If this file doesn't exists all jars in the app dir are 
+  added (`classes:${JAVA_APP_DIR}/*`). 
 * **JAVA_ENABLE_DEBUG** If set remote debugging will be switched on
 * **JAVA_DEBUG_PORT** Port used for remote debugging. Default: 5005
 
