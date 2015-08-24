@@ -39,6 +39,9 @@ EXPOSE 8778 9779
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
+
+# Add run script to /usr/local/sti/run
 COPY run-java.sh /usr/local/sti/run
+
 
 RUN chmod a+x /usr/local/sti/*

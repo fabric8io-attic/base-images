@@ -35,7 +35,7 @@ function build_maven() {
     maven_args="${maven_args} -pl $MAVEN_MODULE -am"
     maven_dep_args="-pl $MAVEN_MODULE -am"
   fi
-  echo "Found pom.xml ... attempting to build with 'mvn ${MAVEN_ARGS}'"
+  echo "Found pom.xml ... attempting to build with mvn ${MAVEN_ARGS}"
 
   old=$(pwd)
   cd ${sti_source_dir}

@@ -13,15 +13,23 @@ agent. See below how to configure this.
 The following environment variables can be used to influence the
 behaviour of this builder image:
 
-## Build-Time
+## Build Time
 
 * **STI_DIR** Base STI dir (default: `/tmp`)
 * **STI_SOURCE_DIR** Directory where the source should be copied to (default: `${STI_DIR}/src`)
 * **STI_ARTIFACTS_DIR** Artifact directory used for incremental build (default: `${STI_DIR}/artifacts`)
 * **OUTPUT_DIR** Directory where to find the generated artifacts (default: `${STI_SOURCE_DIR}/target`)
 * **JAVA_APP_DIR** Where the application jar should be put to (default: `/app`)
+* **MAVEN_ARGS** Arguments to use when calling maven (default: `package dependency:copy-dependencies -DskipTests -e`)
+* **MAVEN_MODULE** For a multi-module maven build this variable can pick a single module via its maven coordinates 
+  (e.g. `io.fabric8.jube.images.fabric8:quickstart-java-simple-fatjar`)
+* **MAVEN_EXTRA_ARGS** Additional args, useful for temporary adding arguments like `-X`
+* **MAVEN_DEP_CLASSPATH_OPTS** Options to use when creating a classpath file. After the regular build a file containing 
+  the classpath is created via the goal `dependency:build-classpath` and which can be picked up by `run` when starting up.
+  See [maven-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/build-classpath-mojo.html) 
+  for possible options.
 
-## Run-Time
+## Run Time
 
 The run script can be influenced by the following environment variables:
 
