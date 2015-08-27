@@ -2,18 +2,18 @@
 fish-pepper:
   params:
     - version
-  build: "1.0"
+  build: "1.0.0"
   name: "fabric8/tomcat"
 
 config:
   version:
     default:
-      from: "fabric8/java-centos-openjdk8-jre:1.0"
+      from: "fabric8/java-centos-openjdk8-jre:1.0.0"
       toRemove:
         - "examples"
         - "docs"
     sti-8:
-      from: "fabric8/sti-java-centos7:1.0"
+      from: "fabric8/sti-java-centos7:1.0.0"
       version: "8.0.26"
     8:
       version: "8.0.26"

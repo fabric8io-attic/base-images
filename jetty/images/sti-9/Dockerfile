@@ -1,4 +1,4 @@
-FROM fabric8/sti-java-centos7:1.0
+FROM fabric8/sti-java-centos7:1.0.0
 
 MAINTAINER rhuss@redhat.com
 

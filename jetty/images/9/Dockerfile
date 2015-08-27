@@ -1,4 +1,4 @@
-FROM fabric8/java-centos-openjdk8-jre:1.0
+FROM fabric8/java-centos-openjdk8-jre:1.0.0
 
 MAINTAINER rhuss@redhat.com
 

@@ -2,7 +2,7 @@
 fish-pepper:
   params:
     - version
-  build: "1.0"
+  build: "1.0.0"
   name: "fabric8/karaf"
 
 config:
@@ -10,7 +10,7 @@ config:
     default:
       from:
         jre8: "fabric8/java-centos-openjdk8-jre"
-        version: "1.0"
+        version: "1.0.0"
       url: "http://archive.apache.org/dist/karaf/${KARAF_VERSION}/apache-karaf-${KARAF_VERSION}.tar.gz"
       roleFile:
         file: "users.properties"

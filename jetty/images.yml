@@ -2,7 +2,7 @@
 fish-pepper:
   params:
     - "version"
-  build: "1.0"
+  build: "1.0.0"
   name: "fabric8/jetty"
 
 config:
@@ -12,13 +12,13 @@ config:
       from:
         jre8: "fabric8/java-centos-openjdk8-jre"
         jdk7: "fabric8/java-centos-openjdk7-jdk"
-        version: "1.0"
+        version: "1.0.0"
     9:
       version: "9.3.2.v20150730"
     sti-9:
       from:
         jre8: "fabric8/sti-java-centos7"
-        version: "1.0"
+        version: "1.0.0"
       version: "9.3.2.v20150730"
     8:
       version: "8.1.17.v20150415"

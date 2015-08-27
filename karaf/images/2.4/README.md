@@ -57,7 +57,7 @@ Some options for integration in various environments
 Features:
 
 * Karaf Version: **2.4.3**
-* Base image: *fabric8/java-centos-openjdk8-jre:1.0*)
+* Base image: *fabric8/java-centos-openjdk8-jre:1.0.0*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)
