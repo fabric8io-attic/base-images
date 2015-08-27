@@ -22,11 +22,11 @@ Java application
 
     # ...
     export JAVA_OPTIONS="$JAVA_OPTIONS $(agent-bond-opts)"
-    # .... us JAVA_OPTIONS when starting your app, e.g. as Tomcat does
+    # .... use JAVA_OPTIONS when starting your app, e.g. as Tomcat does
 
 The following versions and defaults are used:
 
-* [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
+* [Jolokia](http://www.jolokia.org) : version **undefined** and port **8778**
 * [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
 
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
@@ -86,11 +86,21 @@ The run script can be influenced by the following environment variables:
   can be started with `java -jar`. If given it takes precedence of
   `$JAVA_MAIN_CLASS`. In addition `$JAVA_APP_DIR` and `$JAVA_WORKDIR`
   are added to the classpath, too. 
+* **JAVA_CLASSPATH** the classpath to use. If not given, the script checks 
+  for a file `${JAVA_APP_DIR}/classpath` and use its content literally 
+  as classpath. If this file doesn't exists all jars in the app dir are 
+  added (`classes:${JAVA_APP_DIR}/*`). 
+* **JAVA_ENABLE_DEBUG** If set remote debugging will be switched on
+* **JAVA_DEBUG_PORT** Port used for remote debugging. Default: 5005
 
 If neither `$JAVA_APP_JAR` nor `$JAVA_MAIN_CLASS` is given,
 `$JAVA_APP_DIR` is checked for a single JAR file which is taken as
 `$JAVA_APP_JAR`. If no or more then one jar file is found, the script
 throws an error. 
+
+Theses variables (except `${JAVA_APP_DIR}`) can be also set in a
+shell config file `${JAVA_APP_DIR}/setenv.sh`, which will be sourced by 
+the startup script.
 
 Any arguments given during startup are taken over as arguments to the
 Java call. E.g. a `docker run myimage-based-on-java arg1 arg2` will
@@ -99,6 +109,6 @@ be hand over the arguments to the Java application.
 
 ### Versions:
 
-* Base-Image: **Alpine undefined**
+* Base-Image: **Alpine 3.2**
 * Java: **OpenJDK 8 1.8.0** (Java Development Kit (JDK))
 * Agent-Bond: **0.1.0** (Jolokia 1.3.1, jmx_exporter 0.3-SNAPSHOT)

@@ -28,14 +28,25 @@ function check_error() {
 }
 
 function build_maven() {
-  # Default args: no tests and copying over dependencies into the target
-  maven_args=${MAVEN_ARGS:-package dependency:copy-dependencies -DskipTests -e}
+
+  # Read in any properties set during the build. Copy it over to setenv.sh used in run-java.sh
+  [ -f "${app_dir}/setenv.sh" ] && rm "${app_dir}/setenv.sh"
+  for sti_env in "${output_dir}/sti.env" "${output_dir}/classes/sti.env"; do
+     if [ -f "${sti_env}" ]; then
+        . ${sti_env}
+        cat ${sti_env} >> "${app_dir}/setenv.sh"
+     fi
+  done
+
+  # Default args: no tests
+  maven_args=${MAVEN_ARGS:-package -DskipTests -e}
+  maven_dep_args=""
 
   if [ x"$MAVEN_MODULE" != x ]; then
     maven_args="${maven_args} -pl $MAVEN_MODULE -am"
     maven_dep_args="-pl $MAVEN_MODULE -am"
   fi
-  echo "Found pom.xml ... attempting to build with mvn ${MAVEN_ARGS}"
+  echo "Found pom.xml ... attempting to build with mvn ${maven_args}"
 
   old=$(pwd)
   cd ${sti_source_dir}

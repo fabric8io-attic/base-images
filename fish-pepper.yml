@@ -1,0 +1,13 @@
+---
+
+# Versions of support libs
+version:
+  agentBond: "0.1.0"
+  jolokia: "1.3.1"
+  jmxExporter: "0.3-SNAPSHOT"
+
+# Who to blame
+maintainer: "rhuss@redhat.com"
+
+# Docker Repo User
+repoUser: "fabric8"

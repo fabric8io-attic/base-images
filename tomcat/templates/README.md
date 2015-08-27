@@ -1,0 +1,21 @@
+## Apache Tomcat {{= fp.config.version.version}}
+
+A simple docker build for installing a vanilla Tomcat {{= fp.config.version.version}} below
+*/opt/tomcat*. It comes out of the box and is intended for use for
+integration testing.
+
+{{= fp.block('appServer-instructions') }}
+
+Features:
+
+* Tomcat Version: **{{=fp.config.version.version}}**
+* Base image: **{{= fp.config.version.from}}**
+* Port: **8080**
+* User **admin** (Password: **admin**) has been added to access the admin
+  applications */host-manager* and */manager*)
+* Documentation and examples have been removed
+* Command: `/opt/tomcat/bin/deploy-and-run.sh` which links .war files from */maven* to 
+  */opt/tomcat/webapps* and then calls `{{= fp.config.runCmd}} run`
+* Sets `-Djava.security.egd=file:/dev/./urandom` for faster startup times
+  (though a bit less secure)
+  

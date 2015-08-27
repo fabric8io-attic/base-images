@@ -1,6 +1,7 @@
 FROM centos:7
 RUN yum install -y \
        java-1.7.0-openjdk 
+ENV JAVA_HOME /etc/alternatives/jre
 
 # Agent bond
 ADD agent-bond-opts /bin/

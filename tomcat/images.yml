@@ -1,0 +1,31 @@
+---
+fish-pepper:
+  params:
+    - version
+  build: "1.0"
+  name: "fabric8/tomcat"
+
+config:
+  version:
+    default:
+      from: "fabric8/java-centos-openjdk8-jre:1.0"
+      toRemove:
+        - "examples"
+        - "docs"
+    sti-8:
+      from: "fabric8/sti-java-centos7:1.0"
+      version: "8.0.26"
+    8:
+      version: "8.0.26"
+    7:
+      version: "7.0.64"
+    6:
+      version: "6.0.44"
+    5.5:
+      version: "5.5.36"
+      toRemove:
+        - "balancer"
+        - "jsp-examples"
+        - "servlets-examples"
+        - "tomcat-docs"
+        - "webdav"

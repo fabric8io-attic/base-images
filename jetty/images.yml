@@ -1,0 +1,46 @@
+---
+fish-pepper:
+  params:
+    - "version"
+  build: "1.0"
+  name: "fabric8/jetty"
+
+config:
+  version:
+    default:
+      downloadUrl: "http://download.eclipse.org/jetty/${JETTY_VERSION}/dist/jetty-distribution-${JETTY_VERSION}.tar.gz"
+      from:
+        jre8: "fabric8/java-centos-openjdk8-jre"
+        jdk7: "fabric8/java-centos-openjdk7-jdk"
+        version: "1.0"
+    9:
+      version: "9.3.2.v20150730"
+    sti-9:
+      from:
+        jre8: "fabric8/sti-java-centos7"
+        version: "1.0"
+      version: "9.3.2.v20150730"
+    8:
+      version: "8.1.17.v20150415"
+    7:
+      version: "7.6.17.v20150415"
+    6:
+      version: "6.1.18"
+      downloadUrl: "http://mirrors.ibiblio.org/maven/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip"
+      fish-pepper:
+        mappings:
+          __Dockerfile-456: "Dockerfile"
+    5:
+      version: "5.1.12"
+      downloadUrl: "http://mirrors.ibiblio.org/maven/jetty/jetty-5.1.x/jetty-${JETTY_VERSION}.zip"
+      fish-pepper:
+        mappings:
+          __deploy-and-run-45.sh: "deploy-and-run.sh"
+          __Dockerfile-456: "Dockerfile"
+    4:
+      version: "4.2.27"
+      downloadUrl: "http://mirrors.ibiblio.org/maven/jetty/jetty-4.2.x/jetty-${JETTY_VERSION}.zip"
+      fish-pepper:
+        mappings:
+          __deploy-and-run-45.sh: "deploy-and-run.sh"
+          __Dockerfile-456: "Dockerfile"

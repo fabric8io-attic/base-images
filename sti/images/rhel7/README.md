@@ -46,11 +46,21 @@ The run script can be influenced by the following environment variables:
   can be started with `java -jar`. If given it takes precedence of
   `$JAVA_MAIN_CLASS`. In addition `$JAVA_APP_DIR` and `$JAVA_WORKDIR`
   are added to the classpath, too. 
+* **JAVA_CLASSPATH** the classpath to use. If not given, the script checks 
+  for a file `${JAVA_APP_DIR}/classpath` and use its content literally 
+  as classpath. If this file doesn't exists all jars in the app dir are 
+  added (`classes:${JAVA_APP_DIR}/*`). 
+* **JAVA_ENABLE_DEBUG** If set remote debugging will be switched on
+* **JAVA_DEBUG_PORT** Port used for remote debugging. Default: 5005
 
 If neither `$JAVA_APP_JAR` nor `$JAVA_MAIN_CLASS` is given,
 `$JAVA_APP_DIR` is checked for a single JAR file which is taken as
 `$JAVA_APP_JAR`. If no or more then one jar file is found, the script
 throws an error. 
+
+Theses variables (except `${JAVA_APP_DIR}`) can be also set in a
+shell config file `${JAVA_APP_DIR}/setenv.sh`, which will be sourced by 
+the startup script.
 
 Any arguments given during startup are taken over as arguments to the
 Java call. E.g. a `docker run myimage-based-on-java arg1 arg2` will
@@ -59,6 +69,9 @@ be hand over the arguments to the Java application.
 
 The environment variables are best set in `.sti/environment` top in
 you project. This file is picked up bei STI during building and running.  
+
+You can also put a `setenv.sh` file holding theses environment variables into `${OUTPUT_DIR}` or
+`${OUTPUT_DIR}/classes` which will be picked up during startup of generated application.  
 
 ## Agent-Bond Options
 

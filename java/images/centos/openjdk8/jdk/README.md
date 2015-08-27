@@ -26,7 +26,7 @@ Java application
 
 The following versions and defaults are used:
 
-* [Jolokia](http://www.jolokia.org) : version **1.3.1** and port **8778**
+* [Jolokia](http://www.jolokia.org) : version **undefined** and port **8778**
 * [jmx_exporter](https://github.com/prometheus/jmx_exporter): version **undefined** and port **9779**  
 
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
