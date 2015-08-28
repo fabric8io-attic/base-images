@@ -15,10 +15,10 @@ exposed from a directory */maven*.
 ### Agent Bond
 
 For this image [Agent Bond](https://github.com/fabric8io/agent-bond) is enabled. 
-Agent bond exports metrics from [Jolokia](http://www.jolokia.org) and 
+Agent Bond exports metrics from [Jolokia](http://www.jolokia.org) and 
 [jmx_exporter](https://github.com/prometheus/jmx_exporter).
 
-You can influence of Agent Bind by setting various environment variables:
+You can influence of agent-bond by setting various environment variables:
 
 * **AB_OFF** : If set disables activation of agent-bond (i.e. echos an empty value). By default, agent-bond is enabled.
 * **AB_ENABLED** : Comma separated list of sub-agents enabled. Currently allowed values are `jolokia` and `jmx_exporter`. 
