@@ -14,5 +14,5 @@ Agent Bond exports metrics from [Jolokia](http://www.jolokia.org) and
 
 You can influence of agent-bond by setting various environment variables:
 
-{{= fp.block('agent-bond-options') }}
+{{= fp.block('agent-bond','readme',{ 'fp-no-files' : true }) }}
 
