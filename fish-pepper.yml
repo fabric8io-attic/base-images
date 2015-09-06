@@ -12,6 +12,9 @@ maintainer: "rhuss@redhat.com"
 # Docker Repo User
 repoUser: "fabric8"
 
+# External blocks
 blocks:
+  # run-java.sh for starting up Java processes
   - "https://github.com/fabric8io/run-java-sh.git"
+  # agent bond for export Jolokia and jmx_exporter data
   - "https://github.com/fabric8io/agent-bond.git"
