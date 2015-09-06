@@ -13,9 +13,5 @@ maintainer: "rhuss@redhat.com"
 repoUser: "fabric8"
 
 blocks:
-  - type: "git"
-    url: "https://github.com/fabric8io/run-java-sh.git"
-    path: "fish-pepper"
-  - type: "git"
-    url: "https://github.com/fabric8io/agent-bond.git"
-    path: "fish-pepper"
+  - "https://github.com/fabric8io/run-java-sh.git"
+  - "https://github.com/fabric8io/agent-bond.git"
