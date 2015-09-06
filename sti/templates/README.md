@@ -31,7 +31,7 @@ behaviour of this builder image:
 
 ## Run Time
 
-{{= fp.block('run-java-options') }}
+{{= fp.block('run-java-sh','readme',{ 'fp-no-files' : true }) }}
 
 The environment variables are best set in `.sti/environment` top in
 you project. This file is picked up bei STI during building and running.  
@@ -43,7 +43,7 @@ You can also put a `setenv.sh` file holding theses environment variables into `$
 
 Agent bond itself can be influenced via environment variables, too: 
 
-{{= fp.block('agent-bond-options') }}
+{{= fp.block('agent-bond','readme',{ 'fp-no-files' : true }) }}
 
 [1]: https://github.com/fabric8io/agent-bond
 [2]: https://github.com/rhuss/jolokia

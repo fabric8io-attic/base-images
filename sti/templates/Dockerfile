@@ -32,7 +32,6 @@ ENV JAVA_HOME /etc/alternatives/java_sdk
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
 
-{{= fp.block("run-java-sh","/usr/local/sti/run") }}
-
+{{= fp.block('run-java-sh','copy',{ dest: "/usr/local/sti/run" }) }}
 RUN chmod a+x /usr/local/sti/*
 

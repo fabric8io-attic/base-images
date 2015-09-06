@@ -27,21 +27,12 @@ RUN yum install -y \
 ENV JAVA_HOME /etc/alternatives/java_sdk
 
 # agent-bond with Jolokia and jmx_exporter
-# Agent bond
-ADD agent-bond-opts /bin/
-RUN mkdir -p /opt/agent-bond \
- && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/0.1.0/agent-bond-agent-0.1.0.jar \
-          -o /opt/agent-bond/agent-bond.jar \
- && chmod 444 /opt/agent-bond/agent-bond.jar \
- && chmod 755 /bin/agent-bond-opts
-ADD jmx_exporter_config.json /opt/agent-bond/
-EXPOSE 8778 9779
+undefined
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
 
 # Add run script to /usr/local/sti/run
 COPY run-java.sh /usr/local/sti/run
-
 
 RUN chmod a+x /usr/local/sti/*

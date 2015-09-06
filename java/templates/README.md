@@ -32,7 +32,7 @@ The following versions and defaults are used:
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
 variables:
 
-{{= fp.block('agent-bond-options') }}
+{{= fp.block('agent-bond','readme',{ 'fp-no-files' : true }) }}
 
 ### Startup Script /run-java.sh
 
@@ -41,7 +41,7 @@ to fire up Java applications which are provided as fat-jars, including
 all dependencies or more classical from a main class, where the
 classpath is build up from all jars within a directory.x1
 
-{{= fp.block('run-java-options') }}
+{{= fp.block('run-java-sh','readme',{ 'fp-no-files' : true }) }}
 
 ### Versions:
 
