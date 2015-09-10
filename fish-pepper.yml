@@ -9,8 +9,10 @@ version:
 # Who to blame
 maintainer: "rhuss@redhat.com"
 
-# Docker Repo User
-repoUser: "fabric8"
+# Meta info influencing the build
+fish-pepper:
+  # Docker Repo User
+  repoUser: "fabric8"
 
 # External blocks
 blocks:

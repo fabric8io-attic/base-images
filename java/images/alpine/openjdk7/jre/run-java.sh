@@ -1,13 +1,22 @@
 #!/bin/sh
 
-java_app_dir=${JAVA_APP_DIR:-/app}
+java_app_dir=${JAVA_APP_DIR}
+if [ -z $java_app_dir ]; then
+  # Default is current directory
+  dir=`dirname "$0"`
+  java_app_dir=`cd "${dir}" ; pwd`
+fi
 
-# Read in configurt if given
+# Read in configuration if given
 if [ -f "${java_app_dir}/setenv.sh" ]; then
    . ${java_app_dir}/setenv.sh
 fi
 
-java_options="$JAVA_OPTIONS $(agent-bond-opts)"
+java_options=${JAVA_OPTIONS}
+which agent-bond-opts >/dev/null 2>&1
+if [ $? = 0 ]; then
+  java_options="${java_options} $(agent-bond-opts)"
+fi
 if [ "x$JAVA_ENABLE_DEBUG" != "x" ]; then
     debug_port=${JAVA_DEBUG_PORT}:-5005}
     java_options="${java_options} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${debug_port}"
@@ -27,7 +36,7 @@ fi
 # Try hard to find a sane default if no main class and no main class
 # is specified explicitely
 if [ -z $JAVA_MAIN_CLASS ] && [ -z $JAVA_APP_JAR ]; then
-   # Filter out temporary jars from the shade plugin
+   # Filter out temporary jars from the shade plugin which start with 'original-'
    nr_jars=`ls $java_app_dir/*.jar | grep -v '/original-' | wc -l | tr -d '[[:space:]]'`
    if [ $nr_jars = 1 ]; then
      jar_file=`ls $java_app_dir/*.jar | grep -v '/original-'`

@@ -27,11 +27,18 @@ RUN yum install -y \
 ENV JAVA_HOME /etc/alternatives/java_sdk
 
 # agent-bond with Jolokia and jmx_exporter
-{{= fp.block('agent-bond') }}
+{{= fp.block('agent-bond','install',{ dest: "/usr/bin/run-java-options" }) }}
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
 
+# Copy run script and enable an empty configuration config file with
+# the proper configuration
 {{= fp.block('run-java-sh','copy',{ dest: "/usr/local/sti/run" }) }}
-RUN chmod a+x /usr/local/sti/*
+RUN chmod a+x /usr/local/sti/* \
+ && touch /usr/local/sti/run-env.sh \
+ && chown 1611 /usr/local/sti/run-env.sh
+
+# STI requires a numeric, non-0 UID
+USER 1611
 

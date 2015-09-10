@@ -1,86 +1,172 @@
-#!/bin/sh
+#!/bin/sh -x
 
 # ==============================================================================
-# Variable setup
 
-. sti-setup
+# Global STI variable setup
+source sti-setup
 
-# Where artifacts are created within the build
-output_dir=${OUTPUT_DIR:-${sti_source_dir}/target}
-if [ "${output_dir:0:1}" != "/" ]; then
-   output_dir="${sti_source_dir}/${output_dir}"
-fi
-
-# Directory where to deploy generated artifacts
-app_dir=${JAVA_APP_DIR:-/app}
-[ -d ${app_dir} ] || mkdir -p ${app_dir}
+# Name of environment file included by "run-java.sh"
+run_env_sh="run-env.sh"
 
 # =========================================================================
 # Helper functions:
 
 function check_error() {
-  label=$1
-  error=$2
-  if [ $error -ne 0 ]; then
-    echo "Aborting due to error code $error from $label"
-    exit $error
+  local label=$1
+  local error=$2
+  if [ ${error} -ne 0 ]; then
+    echo "Aborting due to error code $error for $label"
+    exit ${error}
   fi
 }
 
-function build_maven() {
+function get_app_dir() {
+ # Directory where to deploy generated artifacts
+ # Note that this directory must be world writable since
+ # Openshift selects a random UID when running.
+ # Defaults to /tmp/app
+ local dir=${JAVA_APP_DIR:-/tmp/app}
+ if [ ! -d ${dir} ]; then
+   mkdir -p ${dir}
+   check_error "Creating ${dir}" $?
+ fi
+ echo ${dir}
+}
 
-  # Read in any properties set during the build. Copy it over to setenv.sh used in run-java.sh
-  [ -f "${app_dir}/setenv.sh" ] && rm "${app_dir}/setenv.sh"
-  for sti_env in "${output_dir}/sti.env" "${output_dir}/classes/sti.env"; do
-     if [ -f "${sti_env}" ]; then
-        . ${sti_env}
-        cat ${sti_env} >> "${app_dir}/setenv.sh"
-     fi
-  done
+function get_output_dir() {
+  # Where artifacts are created within the build
+  local dir=${OUTPUT_DIR:-${STI_SOURCE_DIR}/target}
+  # If output_dir is not absolute then use it relative to STI_SOURCE_DIR
+  if [ "${dir:0:1}" != "/" ]; then
+     dir="${STI_SOURCE_DIR}/${dir}"
+  fi
+  echo ${dir}
+}
+
+
+function copy_dir() {
+  local src=$1
+  local dest=$2
+
+  cp -r ${src}/* ${dest} >& /dev/null
+  check_error "copying ${src} to ${dest}" $?
+}
+
+# Save environment variables useful for
+# the run script
+function save_run_env() {
+  local dest=$1
+
+  local dir=`dirname "$0"`
+  local base=`cd "${dir}" ; pwd`
+
+  cat <<EOT >>${base}/${run_env_sh}
+JAVA_APP_DIR=${dest}
+EOT
+}
+
+function get_pom_property() {
+  local property=$1
+  local extra_args=""
+  if [ "x$MAVEN_MODULE" != x ]; then
+     extra_args="-pl ${MAVEN_MODULE}"
+  fi
+  # Use maven-help-plugin to extract a property
+  # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix is used
+  echo `mvn help:evaluate \
+            -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
+            ${extra_args} \
+            -Dexpression="${property}" | \
+            grep -v '^\[.*\]' | \
+            grep -v ' ' | \
+            head -n 1`
+}
+
+function build_maven() {
+  # Where artefacts are created during build
+  local output_dir=$1
+
+  # Where to put the artefacts
+  local app_dir=$2
 
   # Default args: no tests
-  maven_args=${MAVEN_ARGS:-package -DskipTests -e}
-  maven_dep_args=""
+  local maven_args=${MAVEN_ARGS:-package -DskipTests -e}
+  local maven_dep_args=""
 
+  # If module is specified, only build this module
   if [ x"$MAVEN_MODULE" != x ]; then
     maven_args="${maven_args} -pl $MAVEN_MODULE -am"
     maven_dep_args="-pl $MAVEN_MODULE -am"
   fi
+
   echo "Found pom.xml ... attempting to build with mvn ${maven_args}"
 
-  old=$(pwd)
-  cd ${sti_source_dir}
+  local old=$(pwd)
+  cd ${STI_SOURCE_DIR}
+  check_error "changing directory to ${STI_SOURCE_DIR}" $?
 
+  # =========
   # Run Maven
   mvn --version
-  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 ${maven_args} ${MAVEN_EXTRA_ARGS}
-
+  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 ${maven_args} ${MAVEN_EXTRA_ARGS}
   check_error "Maven build" $?
 
-  # Write out dependencies into a dedicated file
-  mvn -Dmaven.repo.local=${sti_artifacts_dir}/m2 \
-      -Dmdep.outputFile=${output_dir}/classpath \
+  # ================
+  # Create classpath
+  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
+      -Dmdep.outputFile=${output_dir}/run-classpath \
       ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
       dependency:build-classpath
+  check_error "Maven dependency extraction" $?
 
+  # ===================
+  # Prepare environment
+  local env_file=${app_dir}/${run_env_sh}
+  [ -f "${env_file}" ] && rm "${env_file}"
+
+  # Add the application jar to the environment file
+  local packaging=`get_pom_property "project.packaging"`
+
+  if [ "x${packaging}" = "xjar" ]; then
+    local final_name=`get_pom_property "project.build.finalName"`
+    echo "JAVA_APP_JAR=${app_dir}/${final_name}.jar" >> "${env_file}"
+  fi;
+
+  # Read in any properties stored during the build. Copy it over to run-env.sh used in run-java.sh
+  for env in "${output_dir}/classes/sti.env" "${output_dir}/sti.env"; do
+     if [ -f "${env}" ]; then
+        cat ${env} >> "${env_file}"
+     fi
+  done
+
+  # ==============
+  # Copy artefacts
   echo "Copying Maven artefacts from ${output_dir} to ${app_dir} ..."
-  cp -r ${output_dir}/* ${app_dir} >& /dev/null
+  copy_dir ${output_dir} ${app_dir}
+
+  # Save env vars for the run script
+  save_run_env ${app_dir}
 
   cd $old
 }
 
 function plain_copy() {
+  local output_dir=$1
+  local app_dir=$2
+
   # Assuming that the source already contains compiled artefacts
   echo "Copying binaries from ${output_dir} to ${app_dir} ..."
-  cp -r ${output_dir}/* ${app_dir} >& /dev/null
+  copy_dir ${output_dir} ${app_dir}
 }
 
 # =========================================================================
-if [ -f "${sti_source_dir}/pom.xml" ]; then
+# Main
+
+if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
   # If a pom.xml is present use maven
-  build_maven
+  build_maven $(get_output_dir) $(get_app_dir)
 else
-  plain_copy
+  plain_copy $(get_output_dir) $(get_app_dir)
 fi
 
 echo "... done"
