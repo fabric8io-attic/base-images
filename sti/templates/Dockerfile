@@ -27,7 +27,7 @@ RUN yum install -y \
 ENV JAVA_HOME /etc/alternatives/java_sdk
 
 # agent-bond with Jolokia and jmx_exporter
-{{= fp.block('agent-bond','install',{ dest: "/usr/bin/run-java-options" }) }}
+{{= fp.block('agent-bond','install',{ dest: "/usr/bin/run-java-options", openshift: true }) }}
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
