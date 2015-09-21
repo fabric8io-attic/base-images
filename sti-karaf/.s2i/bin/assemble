@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_KARAF4_MAVEN_ARGS="install -DskipTests -e"
+DEFAULT_KARAF_MAVEN_ARGS="install -DskipTests -e"
 
 # restore maven dependencies downloaded in a previous build,
 # so they do not have to be downloaded again.
@@ -56,7 +56,7 @@ if [ -f "${LOCAL_SOURCE_DIR}/pom.xml" ]; then
 
   # set default maven args if not set
   if [ -z "${MAVEN_ARGS}" ]; then
-    MAVEN_ARGS=${DEFAULT_KARAF4_MAVEN_ARGS}
+    MAVEN_ARGS=${DEFAULT_KARAF_MAVEN_ARGS}
   fi
 
   echo "Found pom.xml... attempting to build with 'mvn ${MAVEN_ARGS}'"
@@ -78,8 +78,8 @@ else
   echo "Copying binaries in source directory into ${DEPLOY_DIR}..."
 fi
 
-# locate karaf4 assembly
-if [ -z "${KARAF4_ASSEMBLY}" ]; then
+# locate karaf assembly
+if [ -z "${KARAF_ASSEMBLY}" ]; then
   if [ ! -d "${OUTPUT_DIR}" ]; then
     error_exit "Missing directory ${OUTPUT_DIR}"
   fi
@@ -89,18 +89,18 @@ if [ -z "${KARAF4_ASSEMBLY}" ]; then
   if [ $NUM_ARCHIVE_FILES -ne 1 ]; then
     error_exit "Missing or more than one assembly archive file *.tar.gz in ${OUTPUT_DIR}"
   fi
-  KARAF4_ASSEMBLY=`ls -1 *.tar.gz`
+  KARAF_ASSEMBLY=`ls -1 *.tar.gz`
   popd &> /dev/null
 fi
-KARAF4_ASSEMBLY_ARCHIVE=${OUTPUT_DIR}/${KARAF4_ASSEMBLY}
-if [ ! -f "${KARAF4_ASSEMBLY_ARCHIVE}" ]; then
-  error_exit "Missing assembly archive file ${KARAF4_ASSEMBLY_ARCHIVE}"
+KARAF_ASSEMBLY_ARCHIVE=${OUTPUT_DIR}/${KARAF_ASSEMBLY}
+if [ ! -f "${KARAF_ASSEMBLY_ARCHIVE}" ]; then
+  error_exit "Missing assembly archive file ${KARAF_ASSEMBLY_ARCHIVE}"
 fi
 
 # extract custom assembly to DEPLOY_DIR
-tar xzf "$KARAF4_ASSEMBLY_ARCHIVE" -C ${DEPLOY_DIR}
-KARAF4_ASSEMBLY_DIR=${KARAF4_ASSEMBLY_ARCHIVE%.tar.gz}
-ln -s "${DEPLOY_DIR}/${KARAF4_ASSEMBLY_DIR##*/}" "${DEPLOY_DIR}/karaf"
+tar xzf "$KARAF_ASSEMBLY_ARCHIVE" -C ${DEPLOY_DIR}
+KARAF_ASSEMBLY_DIR=${KARAF_ASSEMBLY_ARCHIVE%.tar.gz}
+ln -s "${DEPLOY_DIR}/${KARAF_ASSEMBLY_DIR##*/}" "${DEPLOY_DIR}/karaf"
 
 # cleanup maven build artifacts to reduce image size
 if [ -f "${LOCAL_SOURCE_DIR}/pom.xml" ]; then
@@ -110,10 +110,7 @@ if [ -f "${LOCAL_SOURCE_DIR}/pom.xml" ]; then
   popd
 fi
 
-# karaf4 specific config
-if [ -f ${DEPLOY_DIR}/karaf/bin/karaf ]; then
-  # send log output to stdout
-  sed -i 's/^\(.*rootLogger.*\)out/\1stdout/' ${DEPLOY_DIR}/karaf/etc/org.ops4j.pax.logging.cfg
-fi
+# send log output to stdout
+sed -i 's/^\(.*rootLogger.*\)out/\1stdout/' ${DEPLOY_DIR}/karaf/etc/org.ops4j.pax.logging.cfg
 
 echo "...done!"

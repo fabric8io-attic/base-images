@@ -27,6 +27,10 @@ RUN mkdir /opt/jolokia \
 # Jolokia config
 COPY ./jolokia.properties /opt/jolokia/jolokia.properties
 
+# Copy deploy-and-run.sh for standalone images
+COPY ./deploy-and-run.sh /opt/karaf/bin/
+RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh
+
 # STI requires a numeric, non-0 UID
 USER 1611
 
