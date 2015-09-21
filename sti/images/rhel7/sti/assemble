@@ -3,7 +3,7 @@
 # ==============================================================================
 
 # Global STI variable setup
-source sti-setup
+source `dirname "$0"`/sti-setup
 
 # Name of environment file included by "run-java.sh"
 run_env_sh="run-env.sh"
