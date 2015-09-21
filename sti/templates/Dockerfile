@@ -5,17 +5,24 @@ LABEL io.openshift.s2i.destination /tmp
 
 # Some version information
 LABEL io.fabric8.s2i.version.maven {{= fp.version.maven }}
-LABEL io.fabric8.s2i.version.agentbond  {{= fp.version.agentBond }}
+LABEL io.fabric8.s2i.version.{{= fp.config.base.agent }} {{= fp.version[fp.config.base.agent] }}
 
 ADD README.md /tmp/README.md
 
+{{? fp.config.base.installJava }}
 # Standard Java 8 from the repo
+ENV JAVA_HOME /etc/alternatives/java_sdk
 RUN yum install -y \
     java-1.8.0-openjdk-headless \
     java-1.8.0-openjdk-devel.x86_64 \
     pandoc \
  && yum clean all -y \
- && curl http://www.apache.org/dist/maven/maven-{{= fp.version.mavenMajor}}/{{= fp.version.maven }}/binaries/apache-maven-{{= fp.version.maven }}-bin.tar.gz | \
+{{??}}
+USER root
+RUN yum install -y \
+    pandoc \
+ && yum clean all -y \
+{{?}} && curl http://www.apache.org/dist/maven/maven-{{= fp.version.mavenMajor}}/{{= fp.version.maven }}/binaries/apache-maven-{{= fp.version.maven }}-bin.tar.gz | \
     tar -xzf - -C /opt \
  && ln -s /opt/apache-maven-{{= fp.version.maven }} /opt/maven \
  && ln -s /opt/maven/bin/mvn /usr/bin/mvn \
@@ -24,10 +31,9 @@ RUN yum install -y \
  && yum -y autoremove \
  && rm /tmp/README.md
 
-ENV JAVA_HOME /etc/alternatives/java_sdk
-
-# agent-bond with Jolokia and jmx_exporter
-{{= fp.block('agent-bond','install',{ dest: "/usr/bin/run-java-options", openshift: true }) }}
+{{? fp.config.base.agent }}
+{{= fp.block(fp.config.base.agent,'install',{ dest: "/usr/bin/run-java-options", openshift: true }) }}
+{{?}}
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti

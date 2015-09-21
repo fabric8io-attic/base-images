@@ -1,20 +1,17 @@
-FROM openshift/base-centos7
+FROM jboss/base-jdk:8
 
 # Directory which will hold the source provided by STI
 LABEL io.openshift.s2i.destination /tmp
 
 # Some version information
 LABEL io.fabric8.s2i.version.maven 3.3.3
-LABEL io.fabric8.s2i.version.agent-bond undefined
+LABEL io.fabric8.s2i.version.jolokia 1.3.1
 
 ADD README.md /tmp/README.md
 
 
-# Standard Java 8 from the repo
-ENV JAVA_HOME /etc/alternatives/java_sdk
+USER root
 RUN yum install -y \
-    java-1.8.0-openjdk-headless \
-    java-1.8.0-openjdk-devel.x86_64 \
     pandoc \
  && yum clean all -y \
  && curl http://www.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | \
@@ -27,16 +24,15 @@ RUN yum install -y \
  && rm /tmp/README.md
 
 
-# Agent bond including Jolokia and jmx_exporter
-ADD agent-bond-opts /usr/bin/run-java-options
-RUN mkdir -p /opt/agent-bond \
- && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/0.1.0/agent-bond-agent-0.1.0.jar \
-          -o /opt/agent-bond/agent-bond.jar \
- && chmod 444 /opt/agent-bond/agent-bond.jar \
+# Jolokia agent
+ADD jolokia-opts /usr/bin/run-java-options
+RUN mkdir -p /opt/jolokia \
+ && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.1/jolokia-jvm-${fp.version.jolokia}-agent.jar \
+         -o /opt/jolokia/jolokia.jar \
+ && chmod 444 /opt/jolokia/jolokia.jar \
  && chmod 755 /usr/bin/run-java-options
-ADD jmx_exporter_config.json /opt/agent-bond/
-EXPOSE 8778 9779
-LABEL io.openshift.expose-services 8778/tcp:jolokia,9779/tcp:jmx_exporter
+EXPOSE 8778
+LABEL io.openshift.expose-services 8778/tcp:jolokia
 
 
 # /usr/local/sti is set as script directory in base image

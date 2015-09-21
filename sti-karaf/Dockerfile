@@ -1,6 +1,8 @@
-FROM fabric8/java-centos-openjdk8-jre:1.0.0
+FROM jboss/base-jdk:8
 
 MAINTAINER Dhiraj Bokde <dhirajsb@gmail.com>
+
+ENV JOLOKIA_VERSION=1.3.1
 
 # Expose jolokia port
 EXPOSE 8778
@@ -15,7 +17,8 @@ LABEL io.k8s.description="Platform for building and running Apache Karaf OSGi ap
 COPY ./.s2i/bin/ /usr/local/s2i
 
 # download jolokia in the sti builder
-RUN mkdir /opt/jolokia && curl -L http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.1/jolokia-jvm-1.3.1-agent.jar > /opt/jolokia/jolokia.jar
+RUN mkdir /opt/jolokia \
+ && curl -L http://central.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar > /opt/jolokia/jolokia.jar
 
 # Jolokia config
 COPY ./jolokia.properties /opt/jolokia/jolokia.properties

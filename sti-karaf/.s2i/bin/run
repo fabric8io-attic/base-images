@@ -1,0 +1,52 @@
+#!/bin/bash
+
+function jolokia_opts {
+  #!/bin/bash
+  dir=${AB_JOLOKIA_DIR:-/opt/jolokia}
+  if [ -z ${AB_JOLOKIA_OFF+x} ]; then
+    opts="-javaagent:$dir/jolokia.jar"
+    config=${AB_JOLOKIA_CONFIG:-$dir/jolokia.properties}
+    if [ -f "$AB_JOLOKIA_CONFIG" ]; then
+      # Configuration takes precedence
+      opts="${opts}=config=${AB_JOLOKIA_CONFIG}"
+    else
+      # Direct options only if no configuration is found
+      opts="${opts}=host=${AB_JOLOKIA_HOST:-*},agentId=${AB_JOLOKIA_ID:-$HOSTNAME}"
+      if [ -n "$AB_JOLOKIA_PORT" ]; then
+        opts="${opts},port=${AB_JOLOKIA_PORT}"
+      fi
+      if [ -n "$AB_JOLOKIA_AUTHMODE" ]; then
+        opts="${opts},authMode=${AB_JOLOKIA_AUTHMODE}"
+      fi
+      if [ -n "$AB_JOLOKIA_AUTHURL" ]; then
+        opts="${opts},authUrl=${AB_JOLOKIA_AUTHURL}"
+      fi
+      if [ -n "$AB_JOLOKIA_AUTHPRINCIPAL_SPEC" ]; then
+        opts="${opts},authPrincipalSpec=${AB_JOLOKIA_AUTHPRINCIPAL_SPEC}"
+      fi
+      if [ -n "$AB_JOLOKIA_AUTHIGNORE_CERTS" ]; then
+        opts="${opts},authIgnoreCerts=${AB_JOLOKIA_AUTHIGNORE_CERTS}"
+      fi
+      if [ -n "$AB_JOLOKIA_REALM" ]; then
+        opts="${opts},realm=${AB_JOLOKIA_REALM}"
+      fi
+      if [ -n "$AB_JOLOKIA_USER" ]; then
+        opts="${opts},user=${AB_JOLOKIA_USER}"
+      fi
+      if [ -n "$AB_JOLOKIA_PASSWORD" ]; then
+        opts="${opts},password=${AB_JOLOKIA_PASSWORD}"
+      fi
+    fi
+    echo $opts
+  fi
+}
+
+# Output from assemble script
+DEPLOY_DIR=/opt/jboss
+
+echo "Executing ${DEPLOY_DIR}/karaf/bin/karaf server ..."
+if [ -z "${KARAF_OPTS}" ]; then
+  KARAF_OPTS=$(jolokia_opts)
+  export KARAF_OPTS
+fi
+${DEPLOY_DIR}/karaf/bin/karaf server
