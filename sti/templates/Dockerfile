@@ -4,12 +4,12 @@ FROM {{= fp.config.base.from }}
 LABEL io.openshift.s2i.destination /tmp
 
 # Some version information
-LABEL io.fabric8.s2i.version.maven {{= fp.version.maven }} \
-      io.fabric8.s2i.version.{{= fp.config.base.agent }} {{= fp.version[fp.config.base.agent] }} \
+LABEL io.fabric8.s2i.version.maven={{= fp.version.maven }} \
+      io.fabric8.s2i.version.{{= fp.config.base.agent }}={{= fp.version[fp.config.base.agent] }} \
       io.k8s.description="Platform for building and running plain Java applications (flat classpath or fat jars)" \
       io.k8s.display-name="Java Applications" \
-      io.openshift.s2i.scripts-url="image://usr/local/s2i" \
-      io.openshift.tags="builder,java"
+      io.openshift.tags="builder,java" \
+      io.openshift.s2i.scripts-url=image:///usr/local/sti
 
 USER root
 
@@ -37,10 +37,11 @@ COPY sti /usr/local/sti
 {{= fp.block('run-java-sh','copy',{ dest: "/usr/local/sti/run" }) }}
 RUN chmod a+x /usr/local/sti/* \
  && touch /usr/local/sti/run-env.sh \
- && chown 1611 /usr/local/sti/run-env.sh
+ && chown 1000 /usr/local/sti/run-env.sh \
+ && chmod 666 /usr/local/sti/run-env.sh
 
 ADD README.md /usr/local/sti/usage.txt
 
 # STI requires a numeric, non-0 UID
-USER 1611
+USER 1000
 

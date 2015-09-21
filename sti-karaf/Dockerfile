@@ -32,7 +32,7 @@ COPY ./jolokia.properties /opt/jolokia/jolokia.properties
 COPY ./deploy-and-run.sh /opt/karaf/bin/
 RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh
 
-# STI requires a numeric, non-0 UID
-USER 1611
+# STI requires a numeric, non-0 UID. user "jboss" has UID 1000 ...
+USER 1000
 
 CMD ["/usr/bin/usage"]

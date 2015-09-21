@@ -29,8 +29,7 @@ You can influence of agent-bond by setting various environment variables:
 
 * **AB_JOLOKIA_CONFIG** : If set uses this file (including path) as Jolokia JVM agent properties (as described 
   in Jolokia's [reference manual](http://www.jolokia.org/reference/html/agents.html#agents-jvm)). 
-  By default this is `/opt/jolokia/jolokia.properties`. If this file exists, it be will taken 
-  as configuration and **any other config options are ignored**.  
+  By default this is `/opt/jolokia/jolokia.properties`. 
 * **AB_JOLOKIA_HOST** : Host address to bind to (Default: `0.0.0.0`)
 * **AB_JOLOKIA_PORT** : Port to use (Default: `8778`)
 * **AB_JOLOKIA_USER** : User for authentication. By default authentication is switched off.

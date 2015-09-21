@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. sti-setup
+. `dirname "$0"`/sti-setup
 
 # Tar up maven repository for reuse in an incremental build
 if [ -d "${sti_artifacts_dir}/m2" ]; then
