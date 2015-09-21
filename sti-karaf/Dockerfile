@@ -16,6 +16,10 @@ LABEL io.k8s.description="Platform for building and running Apache Karaf OSGi ap
 # Copy the S2I scripts to /usr/local/s2i
 COPY ./.s2i/bin/ /usr/local/s2i
 
+
+# Temporary switch to root
+USER root
+
 # download jolokia in the sti builder
 RUN mkdir /opt/jolokia \
  && curl -L http://central.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar > /opt/jolokia/jolokia.jar
