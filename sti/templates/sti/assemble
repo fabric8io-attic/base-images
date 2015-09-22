@@ -8,6 +8,9 @@ source `dirname "$0"`/sti-setup
 # Name of environment file included by "run-java.sh"
 run_env_sh="run-env.sh"
 
+# Maven arguments setting up the environment
+maven_env_args="-Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2"
+
 # =========================================================================
 # Helper functions:
 
@@ -74,12 +77,35 @@ function get_pom_property() {
   # Use maven-help-plugin to extract a property
   # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix is used
   echo `mvn help:evaluate \
-            -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
+            ${maven_env_args} \
             ${extra_args} \
             -Dexpression="${property}" | \
             grep -v '^\[.*\]' | \
             grep -v ' ' | \
             head -n 1`
+}
+
+function mvn_settings_with_mirror {
+  cat <<EOT
+<settings>
+  <mirrors>
+    <mirror>
+      <id>sti-mirror</id>
+      <url>$1</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>
+EOT
+}
+
+function setup_maven() {
+  if [ x"$MAVEN_MIRROR" != x ]; then
+    echo "`mvn_settings_with_mirror ${MAVEN_MIRROR}`" > ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml
+    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml"
+  elif [ -f "${STI_SOURCE_DIR}/.m2/settings.xml" ]; then
+    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/.m2/settings.xml"
+  fi
 }
 
 function build_maven() {
@@ -108,12 +134,12 @@ function build_maven() {
   # =========
   # Run Maven
   mvn --version
-  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 ${maven_args} ${MAVEN_EXTRA_ARGS}
+  mvn ${maven_env_args} ${maven_args} ${MAVEN_EXTRA_ARGS}
   check_error "Maven build" $?
 
   # ================
   # Create classpath
-  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
+  mvn ${maven_env_args} \
       -Dmdep.outputFile=${output_dir}/run-classpath \
       ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
       dependency:build-classpath
@@ -164,6 +190,7 @@ function plain_copy() {
 
 if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
   # If a pom.xml is present use maven
+  setup_maven
   build_maven $(get_output_dir) $(get_app_dir)
 else
   plain_copy $(get_output_dir) $(get_app_dir)

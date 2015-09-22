@@ -6,9 +6,11 @@ for microservices. The application can be either provided as an
 executable FAT Jar or in the more classical with JARs on a flat
 classpath with one Main-Class.
 
+
 This image also provides an easy integration with [agent-bond][1]
 which wraps an [Jolokia][2] and Prometheus [jmx_exporter][3]
 agent. See below how to configure this.
+
 
 The following environment variables can be used to influence the
 behaviour of this builder image:
@@ -28,6 +30,7 @@ behaviour of this builder image:
   the classpath is created via the goal `dependency:build-classpath` and which can be picked up by `run` when starting up.
   See [maven-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/build-classpath-mojo.html) 
   for possible options.
+* **MAVEN_MIRROR** If set to an Maven repository URL this URL is taken as a mirror for Maven central
 
 ## Run Time
 
@@ -76,12 +79,12 @@ Java app.
 The environment variables are best set in `.sti/environment` top in
 you project. This file is picked up bei STI during building and running.  
 
-You can also put a `setenv.sh` file holding theses environment variables into `${OUTPUT_DIR}` or
+You can also put a `sti.env` file holding theses environment variables into `${OUTPUT_DIR}` or
 `${OUTPUT_DIR}/classes` which will be picked up during startup of generated application.  
 
-## Agent-Bond Options
+### Agent-Bond Options
 
-Agent bond itself can be influenced via environment variables, too: 
+Agent bond itself can be influenced with the following environment variables: 
 
 * **AB_OFF** : If set disables activation of agent-bond (i.e. echos an empty value). By default, agent-bond is enabled.
 * **AB_ENABLED** : Comma separated list of sub-agents enabled. Currently allowed values are `jolokia` and `jmx_exporter`. 

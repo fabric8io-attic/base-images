@@ -38,7 +38,6 @@ LABEL io.openshift.expose-services 8778/tcp:jolokia,9779/tcp:jmx_exporter
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
-ENV PATH=$PATH:/usr/local/sti
 
 # Copy run script and enable an empty configuration config file with
 # the proper configuration
@@ -54,3 +53,5 @@ ADD README.md /usr/local/sti/usage.txt
 
 # STI requires a numeric, non-0 UID
 USER 1000
+
+ENV PATH=$PATH:/usr/local/sti

@@ -12,7 +12,5 @@ For this image [Agent Bond](https://github.com/fabric8io/agent-bond) is enabled.
 Agent Bond exports metrics from [Jolokia](http://www.jolokia.org) and 
 [jmx_exporter](https://github.com/prometheus/jmx_exporter).
 
-You can influence of agent-bond by setting various environment variables:
-
 {{= fp.block('agent-bond','readme',{ 'fp-no-files' : true }) }}
 
