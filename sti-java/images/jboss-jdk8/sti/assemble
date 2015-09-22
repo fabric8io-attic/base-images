@@ -51,7 +51,7 @@ function copy_dir() {
   local src=$1
   local dest=$2
 
-  cp -r ${src}/* ${dest} >& /dev/null
+  cp -r ${src}/* ${dest}
   check_error "copying ${src} to ${dest}" $?
 }
 
@@ -176,15 +176,6 @@ function build_maven() {
   cd $old
 }
 
-function plain_copy() {
-  local output_dir=$1
-  local app_dir=$2
-
-  # Assuming that the source already contains compiled artefacts
-  echo "Copying binaries from ${output_dir} to ${app_dir} ..."
-  copy_dir ${output_dir} ${app_dir}
-}
-
 # =========================================================================
 # Main
 
@@ -193,7 +184,9 @@ if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
   setup_maven
   build_maven $(get_output_dir) $(get_app_dir)
 else
-  plain_copy $(get_output_dir) $(get_app_dir)
+  # Assuming that the source already contains compiled artefacts
+  echo "Copying binaries from ${output_dir} to ${app_dir} ..."
+  copy_dir $(get_output_dir) $(get_app_dir)
 fi
 
 echo "... done"
