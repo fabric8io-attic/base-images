@@ -33,7 +33,7 @@ RUN mkdir -p /opt/agent-bond \
  && chmod 755 /usr/bin/run-java-options
 ADD jmx_exporter_config.json /opt/agent-bond/
 EXPOSE 8778 9779
-LABEL io.openshift.expose-services 8778/tcp:jolokia,9779/tcp:jmx_exporter
+
 
 
 # /usr/local/sti is set as script directory in base image

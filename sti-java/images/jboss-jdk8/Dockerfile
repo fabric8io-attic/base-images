@@ -25,7 +25,7 @@ RUN mkdir -p /opt/jolokia \
  && chmod 444 /opt/jolokia/jolokia.jar \
  && chmod 755 /usr/bin/run-java-options
 EXPOSE 8778
-LABEL io.openshift.expose-services 8778/tcp:jolokia
+
 
 
 # /usr/local/sti is set as script directory in base image

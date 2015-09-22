@@ -24,7 +24,7 @@ RUN yum install -y \
  && ln -s /opt/maven/bin/mvn /usr/bin/mvn
 
 {{? fp.config.base.agent }}
-{{= fp.block(fp.config.base.agent,'install',{ dest: "/usr/bin/run-java-options", openshift: true }) }}
+{{= fp.block(fp.config.base.agent,'install',{ dest: "/usr/bin/run-java-options" }) }}
 {{?}}
 
 # /usr/local/sti is set as script directory in base image
