@@ -75,7 +75,9 @@ function get_pom_property() {
      extra_args="-pl ${MAVEN_MODULE}"
   fi
   # Use maven-help-plugin to extract a property
-  # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix is used
+  # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix
+  # and without a space in the logoout is suppposed to be the variable value. Won't work
+  # for pathes with space in it.
   echo `mvn help:evaluate \
             ${maven_env_args} \
             ${extra_args} \
@@ -139,11 +141,31 @@ function build_maven() {
 
   # ================
   # Create classpath
-  mvn ${maven_env_args} \
-      -Dmdep.outputFile=${output_dir}/run-classpath \
-      ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
-      dependency:build-classpath
-  check_error "Maven dependency extraction" $?
+  if [ -z ${MAVEN_USE_REPO_DEPENDENCIES} ] || [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
+    # Copy all artefacts into the apps directory and setup a 'short' classpath
+    mvn ${maven_env_args} \
+        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -DincludeScope=runtime \
+        -Dmdep.prefix="${app_dir}" \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        dependency:build-classpath
+    check_error "Maven dependency extraction (short)" $?
+
+    mvn ${maven_env_args} \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        -DincludeScope=runtime \
+        -DoutputDirectory="${app_dir}" \
+        dependency:copy-dependencies
+    check_error "Copy Maven dependencies to ${app_dir}" $?
+  else
+    # Create classpath pointing into the local maven repository
+    mvn ${maven_env_args} \
+        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -DincludeScope=runtime \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        dependency:build-classpath
+    check_error "Maven dependency extraction" $?
+  fi
 
   # ===================
   # Prepare environment
@@ -172,6 +194,11 @@ function build_maven() {
 
   # Save env vars for the run script
   save_run_env ${app_dir}
+
+  if [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
+    rm -rf "${STI_ARTIFACTS_DIR}/m2"
+    check_error "Cannot remove local Maven repository ${STI_ARTIFACTS_DIR}/m2" $?
+  fi
 
   cd $old
 }

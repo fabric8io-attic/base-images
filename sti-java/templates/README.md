@@ -33,7 +33,13 @@ behaviour of this builder image:
   the classpath is created via the goal `dependency:build-classpath` and which can be picked up by `run` when starting up.
   See [maven-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/build-classpath-mojo.html) 
   for possible options.
+* **MAVEN_USE_REPO_DEPENDENCIES** If set to a value then the classpath is build up with pointing to dependencies directly
+  in the local Maven repository. When unset (default) dependent jars are copied into the application directory and the 
+  classpath file is build up from the jars in this directory
 * **MAVEN_MIRROR** If set to an Maven repository URL this URL is taken as a mirror for Maven central
+* **MAVEN_CLEAR_REPO** If set then the Maven repository is removed after the artefact is build. This is useful for keeping
+  the created application image small, but prevents *incremental* builds. Setting this variable implies also that dependent
+  artefacts are copied into the application directory.
 
 ## Run Time
 
