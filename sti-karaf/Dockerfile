@@ -16,7 +16,6 @@ LABEL io.k8s.description="Platform for building and running Apache Karaf OSGi ap
 # Copy the S2I scripts to /usr/local/s2i
 COPY ./.s2i/bin/ /usr/local/s2i
 
-
 # Temporary switch to root
 USER root
 
@@ -32,7 +31,10 @@ COPY ./jolokia.properties /opt/jolokia/jolokia.properties
 COPY ./deploy-and-run.sh /opt/karaf/bin/
 RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh
 
-# STI requires a numeric, non-0 UID. user "jboss" has UID 1000 ...
-USER 1000
+# allow jboss user access to /opt/jboss
+RUN chown -R jboss:jboss /opt/jboss
+
+# STI requires a numeric, non-0 UID
+USER jboss
 
 CMD ["/usr/bin/usage"]
