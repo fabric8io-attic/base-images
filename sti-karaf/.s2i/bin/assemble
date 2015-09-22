@@ -52,7 +52,6 @@ if [ -f "${LOCAL_SOURCE_DIR}/pom.xml" ]; then
   restore_saved_artifacts
 
   pushd ${LOCAL_SOURCE_DIR} &> /dev/null
-  JAVA_HOME=/etc/alternatives/java_sdk_1.7.0
 
   # set default maven args if not set
   if [ -z "${MAVEN_ARGS}" ]; then
