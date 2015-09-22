@@ -1,15 +1,13 @@
 FROM {{= fp.config.base.from }}
 
-# Directory which will hold the source provided by STI
-LABEL io.openshift.s2i.destination /tmp
-
 # Some version information
 LABEL io.fabric8.s2i.version.maven={{= fp.version.maven }} \
       io.fabric8.s2i.version.{{= fp.config.base.agent }}={{= fp.version[fp.config.base.agent] }} \
       io.k8s.description="Platform for building and running plain Java applications (flat classpath or fat jars)" \
       io.k8s.display-name="Java Applications" \
       io.openshift.tags="builder,java" \
-      io.openshift.s2i.scripts-url=image:///usr/local/sti
+      io.openshift.s2i.scripts-url=image:///usr/local/sti \
+      io.openshift.s2i.destination=/tmp
 
 USER root
 
@@ -31,6 +29,7 @@ RUN yum install -y \
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
+ENV PATH=$PATH:/usr/local/sti
 
 # Copy run script and enable an empty configuration config file with
 # the proper configuration
