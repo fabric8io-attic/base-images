@@ -37,4 +37,4 @@ RUN chown -R jboss:jboss /opt/jboss
 # STI requires a numeric, non-0 UID
 USER jboss
 
-CMD ["/usr/bin/usage"]
+CMD ["/usr/local/s2i/usage"]
