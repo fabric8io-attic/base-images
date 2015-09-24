@@ -39,9 +39,9 @@ COPY ./deploy-and-run.sh /opt/karaf/bin/
 RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh
 
 # allow jboss user access to /opt/jboss
-RUN chown -R jboss:jboss /opt/jboss
+RUN chown -R 1000 /opt/jboss
 
 # STI requires a numeric, non-0 UID
-USER jboss
+USER 1000
 
 CMD ["/usr/local/s2i/usage"]
