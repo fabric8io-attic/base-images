@@ -2,7 +2,6 @@
 fish-pepper:
   params:
     - base
-  name: "fabric8/sti-java"
   build: "1.0.7"
 
 # Custom   

@@ -8,6 +8,9 @@ source `dirname "$0"`/sti-setup
 # Name of environment file included by "run-java.sh"
 run_env_sh="run-env.sh"
 
+# Maven arguments setting up the environment
+maven_env_args="-Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2"
+
 # =========================================================================
 # Helper functions:
 
@@ -48,7 +51,7 @@ function copy_dir() {
   local src=$1
   local dest=$2
 
-  cp -r ${src}/* ${dest} >& /dev/null
+  cp -r ${src}/* ${dest}
   check_error "copying ${src} to ${dest}" $?
 }
 
@@ -72,14 +75,39 @@ function get_pom_property() {
      extra_args="-pl ${MAVEN_MODULE}"
   fi
   # Use maven-help-plugin to extract a property
-  # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix is used
+  # It's a bit hackish to get rid of the boiler plate. The first line without a `[....]` prefix
+  # and without a space in the logoout is suppposed to be the variable value. Won't work
+  # for pathes with space in it.
   echo `mvn help:evaluate \
-            -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
+            ${maven_env_args} \
             ${extra_args} \
             -Dexpression="${property}" | \
             grep -v '^\[.*\]' | \
             grep -v ' ' | \
             head -n 1`
+}
+
+function mvn_settings_with_mirror {
+  cat <<EOT
+<settings>
+  <mirrors>
+    <mirror>
+      <id>sti-mirror</id>
+      <url>$1</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>
+EOT
+}
+
+function setup_maven() {
+  if [ x"$MAVEN_MIRROR" != x ]; then
+    echo "`mvn_settings_with_mirror ${MAVEN_MIRROR}`" > ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml
+    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml"
+  elif [ -f "${STI_SOURCE_DIR}/.m2/settings.xml" ]; then
+    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/.m2/settings.xml"
+  fi
 }
 
 function build_maven() {
@@ -108,16 +136,36 @@ function build_maven() {
   # =========
   # Run Maven
   mvn --version
-  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 ${maven_args} ${MAVEN_EXTRA_ARGS}
+  mvn ${maven_env_args} ${maven_args} ${MAVEN_EXTRA_ARGS}
   check_error "Maven build" $?
 
   # ================
   # Create classpath
-  mvn -Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2 \
-      -Dmdep.outputFile=${output_dir}/run-classpath \
-      ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
-      dependency:build-classpath
-  check_error "Maven dependency extraction" $?
+  if [ -z ${MAVEN_USE_REPO_DEPENDENCIES} ] || [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
+    # Copy all artefacts into the apps directory and setup a 'short' classpath
+    mvn ${maven_env_args} \
+        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -DincludeScope=runtime \
+        -Dmdep.prefix="${app_dir}" \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        dependency:build-classpath
+    check_error "Maven dependency extraction (short)" $?
+
+    mvn ${maven_env_args} \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        -DincludeScope=runtime \
+        -DoutputDirectory="${app_dir}" \
+        dependency:copy-dependencies
+    check_error "Copy Maven dependencies to ${app_dir}" $?
+  else
+    # Create classpath pointing into the local maven repository
+    mvn ${maven_env_args} \
+        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -DincludeScope=runtime \
+        ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
+        dependency:build-classpath
+    check_error "Maven dependency extraction" $?
+  fi
 
   # ===================
   # Prepare environment
@@ -147,16 +195,12 @@ function build_maven() {
   # Save env vars for the run script
   save_run_env ${app_dir}
 
+  if [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
+    rm -rf "${STI_ARTIFACTS_DIR}/m2"
+    check_error "Cannot remove local Maven repository ${STI_ARTIFACTS_DIR}/m2" $?
+  fi
+
   cd $old
-}
-
-function plain_copy() {
-  local output_dir=$1
-  local app_dir=$2
-
-  # Assuming that the source already contains compiled artefacts
-  echo "Copying binaries from ${output_dir} to ${app_dir} ..."
-  copy_dir ${output_dir} ${app_dir}
 }
 
 # =========================================================================
@@ -164,9 +208,12 @@ function plain_copy() {
 
 if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
   # If a pom.xml is present use maven
+  setup_maven
   build_maven $(get_output_dir) $(get_app_dir)
 else
-  plain_copy $(get_output_dir) $(get_app_dir)
+  # Assuming that the source already contains compiled artefacts
+  echo "Copying binaries from ${output_dir} to ${app_dir} ..."
+  copy_dir $(get_output_dir) $(get_app_dir)
 fi
 
 echo "... done"

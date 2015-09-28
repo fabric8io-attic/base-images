@@ -1,15 +1,13 @@
 FROM openshift/base-rhel7
 
-# Directory which will hold the source provided by STI
-LABEL io.openshift.s2i.destination /tmp
-
 # Some version information
 LABEL io.fabric8.s2i.version.maven=3.3.3 \
       io.fabric8.s2i.version.undefined=undefined \
       io.k8s.description="Platform for building and running plain Java applications (flat classpath or fat jars)" \
       io.k8s.display-name="Java Applications" \
       io.openshift.tags="builder,java" \
-      io.openshift.s2i.scripts-url=image:///usr/local/sti
+      io.openshift.s2i.scripts-url=image:///usr/local/sti \
+      io.openshift.s2i.destination=/tmp
 
 USER root
 
@@ -44,3 +42,5 @@ ADD README.md /usr/local/sti/usage.txt
 
 # STI requires a numeric, non-0 UID
 USER 1000
+
+ENV PATH=$PATH:/usr/local/sti

@@ -17,6 +17,8 @@ EXPOSE 8778 9779
 COPY run-java.sh /
 
 
+USER root
+
 RUN mkdir /app \
  && chmod 755 /run-java.sh
 
