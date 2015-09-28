@@ -1,4 +1,10 @@
 FROM centos:7
+
+USER root
+
+RUN mkdir /app
+ENV JAVA_APP_DIR /app
+
 RUN yum install -y \
        java-1.7.0-openjdk 
 ENV JAVA_HOME /etc/alternatives/jre
@@ -13,13 +19,10 @@ RUN mkdir -p /opt/agent-bond \
 ADD jmx_exporter_config.json /opt/agent-bond/
 EXPOSE 8778 9779
 
-# Add run script as /
-COPY run-java.sh /
+# Add run script as /app/run-java.sh and make it executable
+COPY run-java.sh /app/run-java.sh
+RUN chmod 755 /app/run-java.sh
 
 
-USER root
 
-RUN mkdir /app \
- && chmod 755 /run-java.sh
-
-CMD [ "/run-java.sh" ]
+CMD [ "/app/run-java.sh" ]

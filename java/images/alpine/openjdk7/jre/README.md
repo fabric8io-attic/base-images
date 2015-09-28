@@ -5,11 +5,13 @@ OpenJDK 7 (JRE)
 
 It includes:
 
+
 * An [Agent Bond](https://github.com/fabric8io/agent-bond) agent with [Jolokia](http://www.jolokia.org) 
   and Prometheus' [jmx_exporter](https://github.com/prometheus/jmx_exporter). 
-  The agent is installed as `/opt/agent-bond/agent-bond.jar`. 
+  The agent is installed as `/opt/agent-bond/agent-bond.jar`. See below for configuration options. 
 
-* A startup script [`/run-java.sh`](#startup-script-run-javash) for starting up Java applications.
+
+* A startup script [`/app/run-java.sh`](#startup-script-run-javash) for starting up Java applications.
 
 ### Agent Bond
 
@@ -31,6 +33,10 @@ The following versions and defaults are used:
 
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
 variables:
+
+### Agent-Bond Options
+
+Agent bond itself can be influenced with the following environment variables: 
 
 * **AB_OFF** : If set disables activation of agent-bond (i.e. echos an empty value). By default, agent-bond is enabled.
 * **AB_ENABLED** : Comma separated list of sub-agents enabled. Currently allowed values are `jolokia` and `jmx_exporter`. 

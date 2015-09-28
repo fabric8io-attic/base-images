@@ -5,11 +5,15 @@ This image is based on {{= fp.config.base.description }} and provides
 
 It includes:
 
+{{? fp.config.base.agent == "agent-bond" }}
 * An [Agent Bond](https://github.com/fabric8io/agent-bond) agent with [Jolokia](http://www.jolokia.org) 
   and Prometheus' [jmx_exporter](https://github.com/prometheus/jmx_exporter). 
-  The agent is installed as `/opt/agent-bond/agent-bond.jar`. 
+  The agent is installed as `/opt/agent-bond/agent-bond.jar`. See below for configuration options. 
+{{?? fp.config.base.agent == "jolokia" }}
+*  A [Jolokia](http://www.jolokia.org) agent. See below how to configure this.
+{{?}}
 
-* A startup script [`/run-java.sh`](#startup-script-run-javash) for starting up Java applications.
+* A startup script [`/app/run-java.sh`](#startup-script-run-javash) for starting up Java applications.
 
 ### Agent Bond
 
@@ -32,7 +36,7 @@ The following versions and defaults are used:
 You can influence the behaviour of `agent-bond-opts` by setting various environment 
 variables:
 
-{{= fp.block('agent-bond','readme',{ 'fp-no-files' : true }) }}
+{{= fp.block(fp.config.base.agent,'readme',{ 'fp-no-files' : true }) }}
 
 ### Startup Script /run-java.sh
 
@@ -46,5 +50,7 @@ classpath is build up from all jars within a directory.x1
 ### Versions:
 
 * Base-Image: **{{= fp.config.base.description + " " + fp.config.base.version }}**
-* Java: **{{= fp.config.version.description + " " + fp.config.version.version }}** ({{= fp.config.type.description }})
-* Agent-Bond: **{{= fp.version.agentBond }}** (Jolokia {{= fp.version.jolokia }}, jmx_exporter {{= fp.version.jmxExporter }})
+* Java: **{{= fp.config.version.description + " " + fp.config.version.version }}** ({{= fp.config.type.description }}){{? fp.config.base.agent == "agent-bond" }}
+* Agent-Bond: **{{= fp.version.agentBond }}** (Jolokia {{= fp.version.jolokia }}, jmx_exporter {{= fp.version.jmxExporter }}){{?? fp.config.base.agent == "jolokia" }}
+* Jolokia: **{{= fp.version.jolokia }}**
+{{?}}

@@ -33,9 +33,9 @@ COPY sti /usr/local/sti
 
 # Copy run script and enable an empty configuration config file with
 # the proper configuration
-# Add run script as /usr/local/sti/run
-COPY run-java.sh /usr/local/sti/run
-
+# Add run script as /usr/local/sti/run/run-java.sh and make it executable
+COPY run-java.sh /usr/local/sti/run/run-java.sh
+RUN chmod 755 /usr/local/sti/run/run-java.sh
 RUN chmod a+x /usr/local/sti/* \
  && touch /usr/local/sti/run-env.sh \
  && chown 1000 /usr/local/sti/run-env.sh \
