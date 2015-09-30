@@ -144,7 +144,7 @@ function build_maven() {
   if [ -z ${MAVEN_USE_REPO_DEPENDENCIES} ] || [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
     # Copy all artefacts into the apps directory and setup a 'short' classpath
     mvn ${maven_env_args} \
-        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -Dmdep.outputFile=${output_dir}/classpath \
         -DincludeScope=runtime \
         -Dmdep.prefix="${app_dir}" \
         ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
@@ -160,7 +160,7 @@ function build_maven() {
   else
     # Create classpath pointing into the local maven repository
     mvn ${maven_env_args} \
-        -Dmdep.outputFile=${output_dir}/run-classpath \
+        -Dmdep.outputFile=${output_dir}/classpath \
         -DincludeScope=runtime \
         ${maven_dep_args} ${MAVEN_DEP_CLASSPATH_OPTS} \
         dependency:build-classpath
