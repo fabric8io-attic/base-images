@@ -51,6 +51,13 @@ if [ -f "${LOCAL_SOURCE_DIR}/pom.xml" ]; then
   # incremental build
   restore_saved_artifacts
 
+  # copy source directory/.m2/settings.xml file
+  CUSTOM_MAVEN_SETTINGS="${LOCAL_SOURCE_DIR}/.m2/settings.xml"
+  if [ -f "${CUSTOM_MAVEN_SETTINGS}" ]; then
+    echo "Using custom maven settings from ${CUSTOM_MAVEN_SETTINGS}..."
+    cp "${CUSTOM_MAVEN_SETTINGS}" ~/.m2/settings.xml
+  fi
+
   pushd ${LOCAL_SOURCE_DIR} &> /dev/null
 
   # set default maven args if not set
