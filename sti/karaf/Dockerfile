@@ -41,9 +41,9 @@ COPY ./jolokia.properties /opt/jolokia/jolokia.properties
 COPY ./deploy-and-run.sh /opt/karaf/bin/
 RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh
 
-# allow jboss user access to /opt/jboss and /opt/karaf
-RUN chown -R 1000 /opt/jboss \
-    && chown -R 1000 /opt/karaf
+# Necessary to permit running with a randomised UID
+RUN chmod -R a+rwX /opt/jboss \
+    && chmod -R a+rwX /opt/karaf
 
 # STI requires a numeric, non-0 UID
 USER 1000
