@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "Executing /opt/jboss/fuse/bin/run ..."
+
+if [ -z "${JVM_AGENT}" ]; then
+  JVM_AGENT="$(/opt/jolokia-opts)"
+  export JVM_AGENT
+fi
+/opt/jboss/fuse/bin/run

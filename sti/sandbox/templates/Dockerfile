@@ -2,7 +2,7 @@ FROM {{= fp.config.base.from }}
 
 # Some version information
 LABEL io.fabric8.s2i.version.maven={{= fp.version.maven }} \
-      io.fabric8.s2i.version.{{= fp.config.base.agent }}={{= fp.version[fp.config.base.agent] }} \
+      io.fabric8.s2i.version.agent-bond={{= fp.version['agent-bond'] }} \
       io.k8s.description="Platform for building and running plain Java applications (flat classpath or fat jars)" \
       io.k8s.display-name="Java Applications" \
       io.openshift.tags="builder,java" \
@@ -11,7 +11,6 @@ LABEL io.fabric8.s2i.version.maven={{= fp.version.maven }} \
 
 USER root
 
-{{? fp.config.base.installJava }}
 # Standard Java 8 from the repo
 ENV JAVA_HOME /etc/alternatives/java_sdk
 RUN yum install -y \
@@ -23,9 +22,7 @@ RUN yum install -y \
  && ln -s /opt/apache-maven-{{= fp.version.maven }} /opt/maven \
  && ln -s /opt/maven/bin/mvn /usr/bin/mvn
 
-{{? fp.config.base.agent }}
-{{= fp.block(fp.config.base.agent,'install',{ dest: "/usr/bin/run-java-options" }) }}
-{{?}}
+{{= fp.block('agent-bond','install',{ dest: "/opt/run-java-options" }) }}
 
 # /usr/local/sti is set as script directory in base image
 COPY sti /usr/local/sti
@@ -37,8 +34,7 @@ RUN chmod a+x /usr/local/sti/* \
  && touch /usr/local/sti/run-env.sh \
  && chown 1000 /usr/local/sti/run-env.sh \
  && chmod 666 /usr/local/sti/run-env.sh
-
-ADD README.md /usr/local/sti/usage.txt
+ADD README-run-java.md /usr/local/sti/usage.txt
 
 # STI requires a numeric, non-0 UID
 USER 1000

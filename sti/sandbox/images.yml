@@ -17,17 +17,9 @@ abSepClosed: "}}"
 
 config:
   base:
-    jboss-jdk8:
-      from: "jboss/base-jdk:8"
-      installJava: false
-      agent: jolokia
     centos7:
       from: "openshift/base-centos7"
-      installJava: true
-      agent: agent-bond
     rhel7:
       from: "openshift/base-rhel7"
-      installJava: true
-      ahemt: agent-bond
       fish-pepper:
         experimental: true
