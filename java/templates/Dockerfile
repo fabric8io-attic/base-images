@@ -6,7 +6,7 @@ RUN mkdir /app
 ENV JAVA_APP_DIR /app
 
 {{= fp.block("java-pkg-" + fp.param.base) || ''}}
-{{= fp.block(fp.config.base.agent,"install") }}
+{{= fp.block(fp.config.base.agent, "install", { dest: "/opt/run-java-options" }) }}
 {{= fp.block("run-java-sh","copy",{dest: "/app"}) }}
 
 {{? fp.config.base.user }}
