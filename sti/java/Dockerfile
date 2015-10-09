@@ -4,14 +4,14 @@ ENV MAVEN_VERSION=3.3.3
 ENV JOLOKIA_VERSION=1.3.1
 
 # Some version information
-LABEL io.fabric8.s2i.version.maven=3.3.3 \
-      io.fabric8.s2i.version.jolokia=1.3.1 \
+LABEL io.fabric8.s2i.version.maven="3.3.3" \
+      io.fabric8.s2i.version.jolokia="1.3.1" \
       io.k8s.description="Platform for building and running plain Java applications (flat classpath only)" \
       io.k8s.display-name="Java Applications" \
       io.openshift.tags="builder,java" \
-      io.openshift.s2i.scripts-url=image:///usr/local/s2i \
-      io.openshift.s2i.destination=/tmp \
-      org.jboss.deployments-dir=/deployments
+      io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
+      io.openshift.s2i.destination="/tmp" \
+      org.jboss.deployments-dir="/deployments"
 
 # Temporary switch to root
 USER root

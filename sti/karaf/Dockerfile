@@ -8,11 +8,10 @@ ENV JOLOKIA_VERSION=1.3.2
 # Expose jolokia port
 EXPOSE 8778
 
-LABEL io.fabric8.s2i.version.maven=3.3.3 \
-      io.fabric8.s2i.version.jolokia=1.3.2 \
+LABEL io.fabric8.s2i.version.maven="3.3.3" \
+      io.fabric8.s2i.version.jolokia="1.3.2" \
       io.k8s.description="Platform for building and running Apache Karaf OSGi applications" \
       io.k8s.display-name="Apache Karaf" \
-      io.openshift.expose-services="8778:jolokia" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
       io.openshift.tags="builder,karaf"
 
