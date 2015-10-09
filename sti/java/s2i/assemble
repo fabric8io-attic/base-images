@@ -1,4 +1,9 @@
-#!/bin/sh -x
+#!/bin/sh
+
+# Enable debugging on highest log level
+if [ x"${BUILD_LOG_LEVEL}" = 5 ]; then
+  set -x
+fi
 
 # ==============================================================================
 
@@ -68,10 +73,10 @@ function build_maven() {
   local output_dir=$1
 
   # Where to put the artefacts
-  local app_dir=${STI_ARTIFACTS_DIR}
+  local app_dir=$2
 
   # Default args: no tests
-  local hawt_app_args="org.jboss.hawt.app:hawt-app-maven-plugin:1.2:build";
+  local hawt_app_args="io.fabric8:hawt-app-maven-plugin:2.2.45:build";
   if [ x"${JAVA_MAIN_CLASS}" != x ]; then
     hawt_app_args="-Dhawt-app.main=${JAVA_MAIN_CLASS} ${hawt_app_args}"
   fi
@@ -120,11 +125,11 @@ function build_maven() {
 if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
   # If a pom.xml is present use maven
   setup_maven
-  build_maven $(get_output_dir) ${STI_ARTIFACTS_DIR}
+  build_maven $(get_output_dir) ${DEPLOYMENTS_DIR}
 else
   # Assuming that the source already contains compiled artefacts
   echo "Copying binaries from ${output_dir} to ${STI_ARTIFACTS_DIR} ..."
-  copy_dir $(get_output_dir) ${STI_ARTIFACTS_DIR}
+  copy_dir $(get_output_dir) ${DEPLOYMENTS_DIR}
 fi
 
 echo "... done"

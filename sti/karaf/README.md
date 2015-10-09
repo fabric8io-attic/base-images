@@ -51,7 +51,26 @@ You can also just override the `MAVEN_DEBUG_ARGS` environment variable with:
 
     -e "MAVEN_DEBUG_ARGS=-X"
 
+## Jolokia configuration
+
+This image uses an [Jolokia](http://www.jolokia.org) for allowing remote management access to the the application
+Jolokia can be influenced with the following environment variables:
+
+* **AB_JOLOKIA_OFF** : If set disables activation of Joloka (i.e. echos an empty value). By default, Jolokia is enabled.
+* **AB_JOLOKIA_CONFIG** : If set uses this file (including path) as Jolokia JVM agent properties (as described 
+  in Jolokia's [reference manual](http://www.jolokia.org/reference/html/agents.html#agents-jvm)). 
+  By default this is `/opt/jolokia/jolokia.properties`. 
+* **AB_JOLOKIA_HOST** : Host address to bind to (Default: `0.0.0.0`)
+* **AB_JOLOKIA_PORT** : Port to use (Default: `8778`)
+* **AB_JOLOKIA_USER** : User for authentication. By default authentication is switched off.
+* **AB_JOLOKIA_PASSWORD** : Password for authentication. By default authentication is switched off.
+* **AB_JOLOKIA_ID** : Agent ID to use (`$HOSTNAME` by default, which is the container id)
+* **AB_JOLOKIA_OPTS**  : Additional options to be appended to the agent opts. They should be given in the format 
+  "key=value,key=value,..."
+* **AB_JOLOKIA_AUTH_OPENSHIFT** : Switch on authentication for OpenShift. 
+
 ## Working with multimodule projects
+
 The example above is pretty handy for multimodule projects. Another useful option is the OUTPUT_DIR environment variable. This variable defines where in the source tree the output will be generated.
 By default the image assumes ./target. If its another directory we need to specify the option.
 

@@ -1,9 +1,13 @@
 #!/bin/bash
 
-echo "Executing /opt/jboss/fuse/bin/run ..."
+# Global STI variable setup
+source `dirname "$0"`/sti-setup
 
-if [ -z "${JVM_AGENT}" ]; then
-  JVM_AGENT="$(/opt/jolokia/jolokia-opts)"
-  export JVM_AGENT
-fi
-/opt/jboss/hawt-app/bin/run
+echo "Executing ${DEPLOYMENTS_DIR}/hawt-app/bin/run ..."
+
+# Always include jolokia-opts, which can be empty if switched off via env
+JAVA_OPTIONS="${JAVA_OPTIONS:+${JAVA_OPTIONS} }$(/opt/jolokia/jolokia-opts)"
+# Temporary options variable until the harmonization hawt-app PR #5 has been applied (hopefully)
+JVM_ARGS="${JVM_ARGS:+${JVM_ARGS} }${JAVA_OPTIONS}"
+export JAVA_OPTIONS JVM_ARGS
+${DEPLOYMENTS_DIR}/hawt-app/bin/run

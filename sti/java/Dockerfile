@@ -6,11 +6,12 @@ ENV JOLOKIA_VERSION=1.3.1
 # Some version information
 LABEL io.fabric8.s2i.version.maven=3.3.3 \
       io.fabric8.s2i.version.jolokia=1.3.1 \
-      io.k8s.description="Platform for building and running plain Java applications (flat classpath or fat jars)" \
+      io.k8s.description="Platform for building and running plain Java applications (flat classpath only)" \
       io.k8s.display-name="Java Applications" \
       io.openshift.tags="builder,java" \
       io.openshift.s2i.scripts-url=image:///usr/local/s2i \
-      io.openshift.s2i.destination=/tmp
+      io.openshift.s2i.destination=/tmp \
+      org.jboss.deployments-dir=/deployments
 
 # Temporary switch to root
 USER root
@@ -30,15 +31,13 @@ RUN mkdir -p /opt/jolokia \
  && chmod 755 /opt/jolokia/jolokia-opts
 EXPOSE 8778
 
-# /usr/local/sti is set as script directory in base image
+# STI scripts + README
 COPY s2i /usr/local/s2i
-
-ADD README.md /usr/local/sti/usage.txt
+ADD README.md /usr/local/s2i/usage.txt
 
 # Necessary to permit running with a randomised UID
-RUN chmod -R a+rwX /opt/jboss \
- && mkdir /opt/src \
- && chmod -R a+rwX /opt/src
+RUN mkdir /opt/src /deployments \
+ && chmod -R a+rwX /opt/src /deployments
 
 # STI requires a numeric, non-0 UID
 USER 1000
