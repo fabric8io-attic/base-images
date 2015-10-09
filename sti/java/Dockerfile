@@ -24,7 +24,7 @@ RUN curl http://www.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apac
 
 # Jolokia agent
 ADD jolokia-opts /opt/jolokia/
-ADD jolokia.properties /opt/jolokia
+ADD jolokia.properties /opt/jolokia/
 RUN mkdir -p /opt/jolokia \
  && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar \
          -o /opt/jolokia/jolokia.jar \
