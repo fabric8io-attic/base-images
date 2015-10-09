@@ -8,7 +8,7 @@ if [ -z ${AB_JOLOKIA_OFF+x} ]; then
    config=${AB_JOLOKIA_CONFIG:-$dir/jolokia.properties}
    if [ -f "$config" ]; then
       # Configuration takes precedence
-      opts="${opts}${sep}${config}"
+      opts="${opts}${sep}config=${config}"
       sep=","
       grep -q -e '^host' ${config} && host_in_config=1
    fi

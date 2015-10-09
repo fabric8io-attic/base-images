@@ -28,14 +28,12 @@ RUN curl http://www.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apac
 
 # Jolokia agent
 ADD jolokia-opts /opt/jolokia/
+ADD jolokia.properties /opt/jolokia/
 RUN curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/${JOLOKIA_VERSION}/jolokia-jvm-${JOLOKIA_VERSION}-agent.jar \
          -o /opt/jolokia/jolokia.jar \
  && chmod 444 /opt/jolokia/jolokia.jar \
  && chmod 755 /opt/jolokia/jolokia-opts
 EXPOSE 8778
-
-# Jolokia config
-COPY ./jolokia.properties /opt/jolokia/jolokia.properties
 
 # Copy the S2I scripts to /usr/local/s2i
 COPY s2i /usr/local/s2i
