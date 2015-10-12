@@ -15,7 +15,11 @@ LABEL io.fabric8.s2i.version.maven="3.3.3" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
       io.openshift.tags="builder,karaf"
 
-ENV PATH /usr/local/s2i:$PATH
+
+ENV PATH=/usr/local/s2i:$PATH \
+    AB_JOLOKIA_CONFIG=/opt/jolokia/jolokia.properties \
+    AB_JOLOKIA_AUTH_OPENSHIFT="cn=OpenShift API Server"
+
 
 # Temporary switch to root
 USER root

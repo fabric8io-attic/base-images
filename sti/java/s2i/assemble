@@ -93,7 +93,7 @@ function build_maven() {
     maven_dep_args="-pl $MAVEN_MODULE -am"
   fi
 
-  echo "Found pom.xml ... attempting to build with mvn ${maven_args}"
+  echo "Found pom.xml ... attempting to build with mvn ${maven_env_args} ${maven_args} ${MAVEN_EXTRA_ARGS}"
 
   local old=$(pwd)
   cd ${STI_SOURCE_DIR}
@@ -101,7 +101,7 @@ function build_maven() {
 
   # =========
   # Run Maven
-  mvn --version
+  mvn ${maven_env_args} --version
   mvn ${maven_env_args} ${maven_args} ${MAVEN_EXTRA_ARGS}
   check_error "Maven build" $?
 
@@ -112,7 +112,7 @@ function build_maven() {
 
   # cleanup maven build artifacts to reduce image size
   echo "Cleaning up maven build artifacts using mvn clean..."
-  mvn clean
+  mvn ${maven_env_args} clean
 
   if [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
     rm -rf "${STI_ARTIFACTS_DIR}/m2"

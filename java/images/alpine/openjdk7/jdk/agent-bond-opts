@@ -13,6 +13,16 @@ esac
 shift
 done
 
+# Check whether a given config is contained in AB_JOLOKIA_OPTS
+is_in_jolokia_opts() {
+  local prop=$1
+  if [ -n "${AB_JOLOKIA_OPTS}" ] && [ x"${AB_JOLOKIA_OPTS}" != x"${AB_JOLOKIA_OPTS/${prop}/}" ]; then
+     echo "yes"
+  else
+     echo "no"
+  fi
+}
+
 dir=${AB_DIR:-/opt/agent-bond}
 sep="="
 
@@ -32,7 +42,7 @@ if [ -z ${AB_OFF+x} ]; then
       opts="${opts}${sep}${config}"
       sep=","
    fi
-   if [ -z ${AB_ENABLED+x} ] || [ x${AB_ENABLED} != x${AB_ENABLED/jolokia/} ]; then
+   if [ -z ${AB_ENABLED+x} ] || [ x"${AB_ENABLED}" != x"${AB_ENABLED/jolokia/}" ]; then
      # Direct options only if no configuration is found
      jsep=""
      jolokia_opts=""
@@ -60,16 +70,38 @@ if [ -z ${AB_OFF+x} ]; then
         jolokia_opts="${jolokia_opts}${jsep}password=${AB_JOLOKIA_PASSWORD}"
         jsep=","
      fi
-     # Integration of 3rd party environments
-     if [ -n "$AB_JOLOKIA_AUTH_OPENSHIFT" ]; then
-        jolokia_opts="${jolokia_opts}${jsep}authMode=delegate,authUrl=${AB_JOLOKIA_AUTH_OPENSHIFT%/}/users/~,authPrincipalSpec=json:metadata/user,authIgnoreCerts=true,authFallbackHeader=X-Authorization"
+     if [ -n "$AB_JOLOKIA_HTTPS" ]; then
+        jolokia_opts="${jolokia_opts}${jsep}protocol=https"
+        use_https=1
         jsep=","
      fi
-      # Add extra opts to the end
+     # Integration with OpenShift client cert auth
+     if [ -n "$AB_JOLOKIA_AUTH_OPENSHIFT" ]; then
+        auth_opts="useSslClientAuthentication=true,extraClientCheck=true"
+        if [ -z ${use_https+x} ]; then
+          auth_opts="${auth_opts},protocol=https"
+        fi
+        if [ $(is_in_jolokia_opts "caCert") != "yes" ]; then
+           auth_opts="${auth_opts},caCert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        fi
+        if [ $(is_in_jolokia_opts "clientPrincipal") != "yes" ]; then
+           if [  x"${AB_JOLOKIA_AUTH_OPENSHIFT}" != x"${AB_JOLOKIA_AUTH_OPENSHIFT/=/}" ]; then
+              # Supposed to contain a principal name to check
+              auth_opts="${auth_opts},clientPrincipal=${AB_JOLOKIA_AUTH_OPENSHIFT}"
+           else
+              # TODO: Set this to a sensible default value
+              auth_opts="${auth_opts},clientPrincipal=cn=OpenShift API Proxy"
+           fi
+        fi
+        jolokia_opts="${jolokia_opts}${jsep}${auth_opts}"
+        jsep=","
+     fi
+     # Add extra opts to the end
      if [ -n "$AB_JOLOKIA_OPTS" ]; then
         jolokia_opts="${jolokia_opts}${jsep}${AB_JOLOKIA_OPTS}"
         jsep=","
      fi
+
      opts="${opts}${sep}jolokia${ab_open_del}${jolokia_opts}${ab_close_del}"
      sep=","
    fi

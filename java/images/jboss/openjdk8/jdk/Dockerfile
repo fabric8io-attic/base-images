@@ -9,7 +9,7 @@ ENV JAVA_APP_DIR /app
 # Jolokia agent
 ADD jolokia-opts /opt/run-java-options
 RUN mkdir -p /opt/jolokia \
- && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.1/jolokia-jvm-1.3.1-agent.jar \
+ && curl http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.3.2/jolokia-jvm-1.3.2-agent.jar \
          -o /opt/jolokia/jolokia.jar \
  && chmod 444 /opt/jolokia/jolokia.jar \
  && chmod 755 /opt/run-java-options

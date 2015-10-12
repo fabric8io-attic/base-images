@@ -1,7 +1,7 @@
 FROM jboss/base-jdk:8
 
 ENV MAVEN_VERSION=3.3.3
-ENV JOLOKIA_VERSION=1.3.1
+ENV JOLOKIA_VERSION=1.3.2
 
 # Some version information
 LABEL io.fabric8.s2i.version.maven="3.3.3" \
@@ -43,4 +43,6 @@ RUN mkdir /opt/src /deployments \
 # STI requires a numeric, non-0 UID
 USER 1000
 
-ENV PATH=$PATH:/usr/local/s2i
+ENV PATH=$PATH:/usr/local/s2i \
+    AB_JOLOKIA_CONFIG=/opt/jolokia/jolokia.properties \
+    AB_JOLOKIA_AUTH_OPENSHIFT="cn=OpenShift API Server"
