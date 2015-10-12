@@ -2,8 +2,12 @@ FROM jboss/base-jdk:8
 
 MAINTAINER Dhiraj Bokde <dhirajsb@gmail.com>
 
-ENV MAVEN_VERSION=3.3.3
-ENV JOLOKIA_VERSION=1.3.2
+ENV MAVEN_VERSION=3.3.3 \
+    JOLOKIA_VERSION=1.3.2 \
+    PATH=/usr/local/s2i:$PATH \
+    AB_JOLOKIA_CONFIG=/opt/jolokia/jolokia.properties \
+    AB_JOLOKIA_AUTH_OPENSHIFT="cn=OpenShift API Server"
+
 
 # Expose jolokia port
 EXPOSE 8778
@@ -15,10 +19,6 @@ LABEL io.fabric8.s2i.version.maven="3.3.3" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i" \
       io.openshift.tags="builder,karaf"
 
-
-ENV PATH=/usr/local/s2i:$PATH \
-    AB_JOLOKIA_CONFIG=/opt/jolokia/jolokia.properties \
-    AB_JOLOKIA_AUTH_OPENSHIFT="cn=OpenShift API Server"
 
 
 # Temporary switch to root
