@@ -45,3 +45,5 @@ RUN mkdir /opt/src /deployments \
 
 # STI requires a numeric, non-0 UID
 USER 1000
+
+CMD ["usage"]

@@ -61,7 +61,7 @@ if [ -z ${AB_JOLOKIA_OFF+x} ]; then
             auth_opts="${auth_opts},clientPrincipal=${AB_JOLOKIA_AUTH_OPENSHIFT}"
          else
             # TODO: Set this to a sensible default value
-            auth_opts="${auth_opts},clientPrincipal=cn=OpenShift API Proxy"
+            auth_opts="${auth_opts},clientPrincipal=cn=system:master-proxy"
          fi
       fi
       opts="${opts}${sep}${auth_opts}"
