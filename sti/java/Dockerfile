@@ -46,4 +46,7 @@ RUN mkdir /opt/src /deployments \
 # STI requires a numeric, non-0 UID
 USER 1000
 
-CMD ["usage"]
+# Use the run script as default since we are working as an hibrid image which can be
+# used directly to. (If we were a plain s2i image we would print the usage info here)
+CMD [ "/usr/local/s2i/run" ]
+
