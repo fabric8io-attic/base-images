@@ -4,7 +4,7 @@ ENV MAVEN_VERSION=3.3.3 \
     JOLOKIA_VERSION=1.3.2 \
     PATH=$PATH:/usr/local/s2i \
     AB_JOLOKIA_CONFIG=/opt/jolokia/jolokia.properties \
-    AB_JOLOKIA_AUTH_OPENSHIFT="cn=OpenShift API Server"
+    AB_JOLOKIA_AUTH_OPENSHIFT="cn=system:master-proxy"
 
 # Some version information
 LABEL io.fabric8.s2i.version.maven="3.3.3" \
