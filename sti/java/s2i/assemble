@@ -6,7 +6,7 @@ if [ x"${BUILD_LOG_LEVEL}" = 5 ]; then
 fi
 
 # Which version of hawt app to use
-hawt_app_version="2.2.45"
+hawt_app_version="2.2.48"
 
 # ==============================================================================
 
@@ -81,7 +81,7 @@ function build_maven() {
   # Default args: no tests
   local hawt_app_args="io.fabric8:hawt-app-maven-plugin:${hawt_app_version}:build";
   if [ x"${JAVA_MAIN_CLASS}" != x ]; then
-    hawt_app_args="-Dhawt-app.main=${JAVA_MAIN_CLASS} ${hawt_app_args}"
+    hawt_app_args="-Dhawt-app.javaMainClass=${JAVA_MAIN_CLASS} ${hawt_app_args}"
   fi
 
   local maven_args="${MAVEN_ARGS:-package ${hawt_app_args} -DskipTests -e}"
