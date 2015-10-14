@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Global STI variable setup
-source `dirname "$0"`/sti-setup
+# Global S2I variable setup
+source `dirname "$0"`/s2i-setup
 
 echo "Executing ${DEPLOYMENTS_DIR}/hawt-app/bin/run ..."
 

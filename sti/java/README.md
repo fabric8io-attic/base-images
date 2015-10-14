@@ -1,6 +1,6 @@
-# Fuse Java STI builder image
+# Fuse Java S2I builder image
 
-This is a STI builder image for Java builds whose result can be run
+This is a S2I builder image for Java builds whose result can be run
 directly without any further application server. It's suited ideally
 for microservices with a flat classpath (but not for "far jars") 
 
@@ -34,7 +34,7 @@ The run script can be influenced by the following environment variables:
 * **JAVA_MAIN_CLASS** The main class to use if not configured within the plugin
 
 The environment variables are best set in `.sti/environment` top in
-you project. This file is picked up bei STI during building and running.  
+you project. This file is picked up bei S2I during building and running.  
 
 #### Jolokia configuration
 

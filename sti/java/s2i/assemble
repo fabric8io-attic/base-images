@@ -10,11 +10,11 @@ hawt_app_version="2.2.48"
 
 # ==============================================================================
 
-# Global STI variable setup
-source `dirname "$0"`/sti-setup
+# Global S2I variable setup
+source `dirname "$0"`/s2i-setup
 
 # Maven arguments setting up the environment
-maven_env_args="-Dmaven.repo.local=${STI_ARTIFACTS_DIR}/m2"
+maven_env_args="-Dmaven.repo.local=${S2I_ARTIFACTS_DIR}/m2"
 
 # =========================================================================
 # Helper functions:
@@ -31,10 +31,10 @@ function check_error() {
 
 function get_output_dir() {
   # Where artifacts are created within the build
-  local dir=${OUTPUT_DIR:-${STI_SOURCE_DIR}/target}
-  # If output_dir is not absolute then use it relative to STI_SOURCE_DIR
+  local dir=${OUTPUT_DIR:-${S2I_SOURCE_DIR}/target}
+  # If output_dir is not absolute then use it relative to S2I_SOURCE_DIR
   if [ "${dir:0:1}" != "/" ]; then
-     dir="${STI_SOURCE_DIR}/${dir}"
+     dir="${S2I_SOURCE_DIR}/${dir}"
   fi
   echo ${dir}
 }
@@ -53,7 +53,7 @@ function mvn_settings_with_mirror {
 <settings>
   <mirrors>
     <mirror>
-      <id>sti-mirror</id>
+      <id>s2i-mirror</id>
       <url>$1</url>
       <mirrorOf>central</mirrorOf>
     </mirror>
@@ -64,10 +64,10 @@ EOT
 
 function setup_maven() {
   if [ x"${MAVEN_MIRROR_URL}" != x ]; then
-    echo "`mvn_settings_with_mirror ${MAVEN_MIRROR_URL}`" > ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml
-    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/mvn-mirrors-settings.xml"
-  elif [ -f "${STI_SOURCE_DIR}/.m2/settings.xml" ]; then
-    maven_env_args="${maven_env_args} -s ${STI_SOURCE_DIR}/.m2/settings.xml"
+    echo "`mvn_settings_with_mirror ${MAVEN_MIRROR_URL}`" > ${S2I_SOURCE_DIR}/mvn-mirrors-settings.xml
+    maven_env_args="${maven_env_args} -s ${S2I_SOURCE_DIR}/mvn-mirrors-settings.xml"
+  elif [ -f "${S2I_SOURCE_DIR}/.m2/settings.xml" ]; then
+    maven_env_args="${maven_env_args} -s ${S2I_SOURCE_DIR}/.m2/settings.xml"
   fi
 }
 
@@ -96,8 +96,8 @@ function build_maven() {
   echo "Found pom.xml ... attempting to build with mvn ${maven_env_args} ${maven_args} ${MAVEN_EXTRA_ARGS}"
 
   local old=$(pwd)
-  cd ${STI_SOURCE_DIR}
-  check_error "changing directory to ${STI_SOURCE_DIR}" $?
+  cd ${S2I_SOURCE_DIR}
+  check_error "changing directory to ${S2I_SOURCE_DIR}" $?
 
   # =========
   # Run Maven
@@ -115,8 +115,8 @@ function build_maven() {
   mvn ${maven_env_args} clean
 
   if [ "x${MAVEN_CLEAR_REPO}" != "x" ]; then
-    rm -rf "${STI_ARTIFACTS_DIR}/m2"
-    check_error "Cannot remove local Maven repository ${STI_ARTIFACTS_DIR}/m2" $?
+    rm -rf "${S2I_ARTIFACTS_DIR}/m2"
+    check_error "Cannot remove local Maven repository ${S2I_ARTIFACTS_DIR}/m2" $?
   fi
 
   cd $old
@@ -125,13 +125,13 @@ function build_maven() {
 # =========================================================================
 # Main
 
-if [ -f "${STI_SOURCE_DIR}/pom.xml" ]; then
+if [ -f "${S2I_SOURCE_DIR}/pom.xml" ]; then
   # If a pom.xml is present use maven
   setup_maven
   build_maven $(get_output_dir) ${DEPLOYMENTS_DIR}
 else
   # Assuming that the source already contains compiled artefacts
-  echo "Copying binaries from ${output_dir} to ${STI_ARTIFACTS_DIR} ..."
+  echo "Copying binaries from ${output_dir} to ${S2I_ARTIFACTS_DIR} ..."
   copy_dir $(get_output_dir) ${DEPLOYMENTS_DIR}
 fi
 

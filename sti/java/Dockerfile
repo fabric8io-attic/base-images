@@ -35,7 +35,7 @@ RUN mkdir -p /opt/jolokia \
  && chmod 755 /opt/jolokia/jolokia-opts
 EXPOSE 8778
 
-# STI scripts + README
+# S2I scripts + README
 COPY s2i /usr/local/s2i
 ADD README.md /usr/local/s2i/usage.txt
 
@@ -43,7 +43,7 @@ ADD README.md /usr/local/s2i/usage.txt
 RUN mkdir /opt/src /deployments \
  && chmod -R a+rwX /opt/src /deployments
 
-# STI requires a numeric, non-0 UID
+# S2I requires a numeric, non-0 UID
 USER 1000
 
 # Use the run script as default since we are working as an hibrid image which can be
