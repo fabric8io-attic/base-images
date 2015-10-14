@@ -6,7 +6,7 @@ RUN mkdir /app
 ENV JAVA_APP_DIR /app
 
 
-RUN echo "http://dl-2.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
  && apk add --update \
     curl \
     openjdk8 \
