@@ -14,11 +14,11 @@ ENV JAVA_HOME /etc/alternatives/jre
 # Agent bond including Jolokia and jmx_exporter
 ADD agent-bond-opts /opt/run-java-options
 RUN mkdir -p /opt/agent-bond \
- && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/0.1.1/agent-bond-agent-0.1.1.jar \
+ && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/0.1.3/agent-bond-agent-0.1.3.jar \
           -o /opt/agent-bond/agent-bond.jar \
  && chmod 444 /opt/agent-bond/agent-bond.jar \
  && chmod 755 /opt/run-java-options
-ADD jmx_exporter_config.json /opt/agent-bond/
+ADD jmx_exporter_config.yml /opt/agent-bond/
 EXPOSE 8778 9779
 
 # Add run script as /app/run-java.sh and make it executable

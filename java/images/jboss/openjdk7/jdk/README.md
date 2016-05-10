@@ -122,4 +122,4 @@ Java app.
 
 * Base-Image: **JBoss with OpenJDK undefined**
 * Java: **OpenJDK 7 1.7.0** (Java Development Kit (JDK))
-* Jolokia: **1.3.2**
+* Jolokia: **2.0.0-M1**

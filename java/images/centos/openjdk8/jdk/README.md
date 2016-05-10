@@ -138,4 +138,4 @@ Java app.
 
 * Base-Image: **CentOS 7**
 * Java: **OpenJDK 8 1.8.0** (Java Development Kit (JDK))
-* Agent-Bond: **0.1.1** (Jolokia 1.3.2, jmx_exporter 0.4)
+* Agent-Bond: **0.1.3** (Jolokia 2.0.0-M1, jmx_exporter 0.6)
