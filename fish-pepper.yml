@@ -2,9 +2,9 @@
 
 # Versions of support libs
 version:
-  agentBond: "0.1.1"
-  jolokia: "1.3.2"
-  jmxExporter: "0.4"
+  agentBond: "0.1.3"
+  jolokia: "2.0.0-M1"
+  jmxExporter: "0.6"
 
 # Who to blame
 maintainer: "rhuss@redhat.com"
