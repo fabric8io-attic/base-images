@@ -1,7 +1,7 @@
 ---
 lowercaseOutputName: true
 lowercaseOutputLabelNames: true
-whilelistObjectNames:
+whitelistObjectNames:
   - ^org.apache.camel:
 rules:
   - pattern: '^org.apache.camel<context=(\w+), type=routes, name=\"(\S+)\"><>((?:Min|Mean|Max|Last|Delta)(?:ProcessingTime)):'
