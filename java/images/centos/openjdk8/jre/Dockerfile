@@ -16,7 +16,7 @@ RUN mkdir -p /opt/agent-bond \
           -o /opt/agent-bond/agent-bond.jar \
  && chmod 444 /opt/agent-bond/agent-bond.jar \
  && chmod 755 /opt/run-java-options
-ADD jmx_exporter_config.json /opt/agent-bond/
+ADD jmx_exporter_config.yml /opt/agent-bond/
 EXPOSE 8778 9779
 
 # Add run script as /app/run-java.sh and make it executable
