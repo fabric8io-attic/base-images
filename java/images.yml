@@ -28,7 +28,6 @@ config:
       user: "jboss"
       # Use the major version
       tagFromMajorVersion: true
-      agent: "jolokia"
       description: "JBoss with OpenJDK"
   version:
     openjdk7:
