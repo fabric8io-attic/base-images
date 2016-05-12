@@ -6,14 +6,15 @@ RUN mkdir /app
 ENV JAVA_APP_DIR /app
 
 
-# Jolokia agent
-ADD jolokia-opts /opt/run-java-options
-RUN mkdir -p /opt/jolokia \
- && curl http://central.maven.org/maven2/org/jolokia/jolokia-agent-jvm/2.0.0-M1/jolokia-agent-jvm-2.0.0-M1-agent.jar \
-         -o /opt/jolokia/jolokia.jar \
- && chmod 444 /opt/jolokia/jolokia.jar \
+# Agent bond including Jolokia and jmx_exporter
+ADD agent-bond-opts /opt/run-java-options
+RUN mkdir -p /opt/agent-bond \
+ && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/0.1.3/agent-bond-agent-0.1.3.jar \
+          -o /opt/agent-bond/agent-bond.jar \
+ && chmod 444 /opt/agent-bond/agent-bond.jar \
  && chmod 755 /opt/run-java-options
-EXPOSE 8778
+ADD jmx_exporter_config.yml /opt/agent-bond/
+EXPOSE 8778 9779
 
 # Add run script as /app/run-java.sh and make it executable
 COPY run-java.sh /app/run-java.sh
