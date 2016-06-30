@@ -136,6 +136,6 @@ Java app.
 
 ### Versions:
 
-* Base-Image: **Alpine 3.2**
+* Base-Image: **Alpine edge**
 * Java: **OpenJDK 7 1.7.0** (Java Runtime Environment (JRE))
 * Agent-Bond: **0.1.3** (Jolokia 2.0.0-M1, jmx_exporter 0.6)
